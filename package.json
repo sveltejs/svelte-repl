@@ -1,0 +1,46 @@
+{
+	"name": "@sveltejs/svelte-repl",
+	"version": "0.0.1",
+	"description": "The <Repl> component used on the Svelte website",
+	"main": "src/Repl.svelte",
+	"svelte": "src/Repl.svelte",
+	"scripts": {
+		"build": "rollup -c",
+		"dev": "rollup -cw",
+		"prepublishOnly": "npm test",
+		"test": "node test/runner.js",
+		"test:browser": "npm run build && serve test/public",
+		"pretest": "npm run build",
+		"lint": "eslint src/**.svelte src/**.js"
+	},
+	"devDependencies": {
+		"eslint": "^5.12.1",
+		"eslint-plugin-svelte3": "git+https://github.com/sveltejs/eslint-plugin-svelte3.git",
+		"port-authority": "^1.0.5",
+		"puppeteer": "^1.9.0",
+		"rollup": "^1.1.2",
+		"rollup-plugin-commonjs": "^9.2.0",
+		"rollup-plugin-node-resolve": "^4.0.0",
+		"rollup-plugin-svelte": "^5.0.1",
+		"sirv": "^0.2.2",
+		"svelte": "^3.0.0-beta.21",
+		"tap-diff": "^0.1.1",
+		"tap-dot": "^2.0.0",
+		"tape-modern": "^1.1.1"
+	},
+	"repository": "https://github.com/sveltejs/svelte-repl",
+	"author": "Rich Harris",
+	"license": "LIL",
+	"keywords": [
+		"svelte"
+	],
+	"files": [
+		"src",
+		"index.mjs",
+		"index.js"
+	],
+	"dependencies": {
+		"codemirror": "^5.45.0",
+		"yootils": "0.0.15"
+	}
+}
