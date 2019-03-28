@@ -3,6 +3,7 @@
 	import getLocationFromStack from './getLocationFromStack.js';
 	import ReplProxy from './ReplProxy.js';
 	import Message from '../Message.svelte';
+	import srcdoc from './srcdoc.js';
 	import { decode } from 'sourcemap-codec';
 
 	const dispatch = createEventDispatcher();
@@ -56,8 +57,7 @@
 			if (token !== current_token) return;
 
 			await proxy.eval(`
-				// needed for context API tutorial
-				window.MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_ACCESS_TOKEN;
+				${setup}
 
 				const styles = document.querySelectorAll('style[id^=svelte-]');
 
@@ -130,19 +130,14 @@
 </style>
 
 <div class="iframe-container">
-	<iframe title="Result" class:inited bind:this={iframe} sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals {relaxed ? 'allow-scripts allow-same-origin' : ''}" class="{error || pending || pending_imports ? 'greyed-out' : ''}" srcdoc='
-		<!doctype html>
-		<html>
-			<head>
-				<link rel="stylesheet" href="/repl-viewer.css">
-			</head>
-			<body>
-				<script src="/curl.js"></script>
-				<script>curl.config(&#123; dontAddFileExt: /./ });</script>
-				<script src="/repl-runner.js"></script>
-			</body>
-		</html>
-	'></iframe>
+	<iframe
+		title="Result"
+		class:inited
+		bind:this={iframe}
+		sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals {relaxed ? 'allow-scripts allow-same-origin' : ''}"
+		class="{error || pending || pending_imports ? 'greyed-out' : ''}"
+		{srcdoc}
+	></iframe>
 
 	<div class="overlay">
 		{#if error}
