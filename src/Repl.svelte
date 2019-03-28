@@ -14,6 +14,7 @@
 	export let embedded = false;
 	export let orientation = 'columns';
 	export let relaxed = false;
+	export let setup = '';
 
 	export function toJSON() {
 		// TODO there's a bug here — Svelte hoists this function because
@@ -224,7 +225,7 @@
 			</section>
 
 			<section slot=b style='height: 100%;'>
-				<Output {svelteUrl} {embedded} {relaxed}/>
+				<Output {svelteUrl} {embedded} {relaxed} {setup}/>
 			</section>
 		</SplitPane>
 	</div>

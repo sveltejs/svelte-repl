@@ -216,8 +216,8 @@
 
 							<span class="remove" on:click="{() => remove(component)}">
 								<svg width="12" height="12" viewBox="0 0 24 24">
-									<line x1='18' y1='6' x2='6' y2='18' />
-									<line x1='6' y1='6' x2='18' y2='18' />
+									<line stroke="#999" x1='18' y1='6' x2='6' y2='18' />
+									<line stroke="#999" x1='6' y1='6' x2='18' y2='18' />
 								</svg>
 							</span>
 						{/if}
@@ -227,8 +227,8 @@
 
 			<button class="add-new" on:click={addNew} title="add new component">
 				<svg width="12" height="12" viewBox="0 0 24 24">
-					<line x1='12' y1='5' x2='12' y2='19' />
-					<line x1='5' y1='12' x2='19' y2='12' />
+					<line stroke="#999" x1='12' y1='5' x2='12' y2='19' />
+					<line stroke="#999" x1='5' y1='12' x2='19' y2='12' />
 				</svg>
 			</button>
 		</div>

@@ -14,6 +14,7 @@
 	export let runtimeError = null;
 	export let embedded = false;
 	export let relaxed = false;
+	export let setup;
 
 	let foo; // TODO workaround for https://github.com/sveltejs/svelte/issues/2122
 
@@ -123,7 +124,7 @@
 		bind:this={viewer}
 		bind:error={runtimeError}
 		{relaxed}
-		on:binding="{e => setPropFromViewer(e.detail.prop, e.detail.value)}"
+		{setup}
 	/>
 </div>
 

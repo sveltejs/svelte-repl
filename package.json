@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "eslint": "^5.12.1",
-    "eslint-plugin-svelte3": "git+https://github.com/sveltejs/eslint-plugin-svelte3.git",
+    "eslint-plugin-svelte3": "^0.4.4",
     "port-authority": "^1.0.5",
     "puppeteer": "^1.9.0",
     "rollup": "^1.1.2",

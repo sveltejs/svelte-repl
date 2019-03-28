@@ -16,6 +16,7 @@
 	}
 
 	export let relaxed = false;
+	export let setup;
 
 	let iframe;
 	let pending_imports = 0;
