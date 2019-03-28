@@ -5,6 +5,7 @@ This is the guts of https://v3.svelte.technology/repl, extracted into its own pa
 ## TODO
 
 * Documentation
+* Tests
 * Themeability
 
 ## License

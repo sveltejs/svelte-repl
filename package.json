@@ -1,6 +1,6 @@
 {
 	"name": "@sveltejs/svelte-repl",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "The <Repl> component used on the Svelte website",
 	"main": "src/Repl.svelte",
 	"svelte": "src/Repl.svelte",
@@ -8,9 +8,8 @@
 		"build": "rollup -c",
 		"dev": "rollup -cw",
 		"prepublishOnly": "npm test",
-		"test": "node test/runner.js",
+		"test": "echo \"no tests yet\"",
 		"test:browser": "npm run build && serve test/public",
-		"pretest": "npm run build",
 		"lint": "eslint src/**.svelte src/**.js"
 	},
 	"devDependencies": {

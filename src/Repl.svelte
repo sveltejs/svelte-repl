@@ -9,7 +9,7 @@
 	import InputOutputToggle from './InputOutputToggle.svelte';
 	import Bundler from './Bundler.js';
 
-	export let svelteUrl = 'https://unpkg.com/svelte/compiler.js';
+	export let svelteUrl = 'https://unpkg.com/svelte';
 	export let rollupUrl = 'https://unpkg.com/rollup/dist/rollup.browser.js';
 	export let embedded = false;
 	export let orientation = 'columns';
