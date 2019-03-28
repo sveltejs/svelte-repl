@@ -178,9 +178,6 @@
 
 	svg {
 		position: relative;
-		/* width: 1.2em;
-		height: 1.2em;
-		top: -0.123em; */
 		overflow: hidden;
 		vertical-align: middle;
 		-o-object-fit: contain;
