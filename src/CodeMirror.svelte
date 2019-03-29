@@ -201,7 +201,7 @@
 		height: 100%;
 		/* background: var(--background); */
 		background: transparent;
-		font: 400 var(--code-fs)/1.7 var(--font-mono);
+		font: 400 14px/1.7 var(--font-mono);
 		color: var(--base);
 	}
 
@@ -214,7 +214,7 @@
 	}
 
 	.codemirror-container :global(.CodeMirror-gutters) {
-		padding: 0 1.6rem 0 .8rem;
+		padding: 0 16px 0 8px;
 		border: none;
 	}
 
@@ -241,7 +241,7 @@
 		padding: 4px 4px 4px 60px;
 		resize: none;
 		font-family: var(--font-mono);
-		font-size: 1.3rem;
+		font-size: 13px;
 		line-height: 1.7;
 		user-select: none;
 		pointer-events: none;

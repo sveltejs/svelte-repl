@@ -78,7 +78,7 @@
 		background-color: var(--back);
 		overflow: hidden;
 		box-sizing: border-box;
-		--pane-controls-h: 4.2rem;
+		--pane-controls-h: 42px;
 	}
 </style>
 

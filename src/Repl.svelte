@@ -163,7 +163,7 @@
 	.container {
 		position: relative;
 		width: 100%;
-		height: calc(100% - 4.2rem);
+		height: calc(100% - 42px);
 	}
 
 	.repl-inner {
@@ -174,8 +174,9 @@
 
 	.repl-inner :global(section) {
 		position: relative;
-		padding: 4.2rem 0 0 0;
+		padding: 42px 0 0 0;
 		height: 100%;
+		box-sizing: border-box;
 	}
 
 	.repl-inner :global(section) > :global(*):first-child {
@@ -183,7 +184,8 @@
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 4.2rem;
+		height: 42px;
+		box-sizing: border-box;
 	}
 
 	.repl-inner :global(section) > :global(*):last-child {

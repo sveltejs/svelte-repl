@@ -11,7 +11,7 @@
 		grid-gap: 0.5em;
 		align-items: center;
 		width: 100%;
-		height: 4.2rem;
+		height: 42px;
 		border-top: 1px solid var(--second);
 	}
 

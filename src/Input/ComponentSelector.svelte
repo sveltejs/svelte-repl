@@ -99,15 +99,17 @@
 	.file-tabs .button, .file-tabs button {
 		position: relative;
 		display: inline-block;
-		font: 400 1.2rem/1.5 var(--font);
+		font: 400 12px/1.5 var(--font);
+		background: white;
+		border: none;
 		border-bottom: var(--border-w) solid transparent;
-		padding: 1.2rem 1.4rem 0.8rem 0.8rem;
+		padding: 12px 14px 8px 8px;
 		margin: 0;
 		color: #999;
 	}
 
 	.file-tabs .button:first-child {
-		padding-left: 1.2rem;
+		padding-left: 12px;
 	}
 
 	.file-tabs .button.active {
@@ -129,9 +131,9 @@
 	input {
 		position: absolute;
 		width: 100%;
-		left: 0.8rem;
-		top: 1.2rem;
-		font: 400 1.2rem/1.5 var(--font);
+		left: 8px;
+		top: 12px;
+		font: 400 12px/1.5 var(--font);
 		border: none;
 		color: var(--flash);
 		outline: none;
@@ -141,12 +143,12 @@
 	.remove {
 		position: absolute;
 		display: none;
-		right: .1rem;
-		top: .4rem;
-		width: 1.6rem;
+		right: 1px;
+		top: 4px;
+		width: 16px;
 		text-align: right;
-		padding: 1.2em 0 1.2em .5em;
-		font-size: 0.8rem;
+		padding: 12px 0 12px 5px;
+		font-size: 8px;
 		cursor: pointer;
 	}
 
@@ -166,8 +168,8 @@
 		position: absolute;
 		left: 0;
 		top: 0;
-		padding: 1.2rem 1rem 0.8rem 0 !important;
-		height: 4.2rem;
+		padding: 12px 10px 8px 0 !important;
+		height: 42px;
 		text-align: center;
 		background-color: white;
 	}

@@ -58,16 +58,19 @@
 		height: var(--pane-controls-h);
 		border-bottom: 1px solid #eee;
 		white-space: nowrap;
+		box-sizing: border-box;
 	}
 
 	button {
 		/* width: 50%;
 		height: 100%; */
+		background: white;
 		text-align: left;
 		position: relative;
-		font: 400 1.2rem/1.5 var(--font);
+		font: 400 12px/1.5 var(--font);
+		border: none;
 		border-bottom: var(--border-w) solid transparent;
-		padding: 1.2rem 1.2rem 0.8rem 1.2rem;
+		padding: 12px 12px 8px 12px;
 		color: #999;
 	}
 
@@ -81,15 +84,16 @@
 	}
 
 	h3 {
-		font: 700 1.2rem/1.5 var(--font);
-		padding: 1.2rem 0 0.8rem 1rem;
-		color: var(--text);
+		font: 700 12px/1.5 var(--font);
+		padding: 12px 0 8px 10px;
+		/* color: var(--text); */
+		color: #333;
 	}
 
 	.tab-content {
 		position: absolute;
 		width: 100%;
-		height: calc(100% - 4.2rem);
+		height: calc(100% - 42px);
 		opacity: 0;
 		pointer-events: none;
 	}

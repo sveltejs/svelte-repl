@@ -6,9 +6,9 @@
 
 <style>
 	.options {
-		padding: 0 1rem;
+		padding: 0 10px;
 		font-family: var(--font-ui);
-		font-size: 1.3rem;
+		font-size: 13px;
 		color: #999;
 	}
 
@@ -76,10 +76,10 @@
 		display: block;
 		box-sizing: border-box;
 		float: left;
-		width: 1.5rem;
-		height: 1.5rem;
-		margin-left: -2.1rem;
-		margin-top: 0.4rem;
+		width: 15px;
+		height: 15px;
+		margin-left: -21px;
+		margin-top: 4px;
 		vertical-align: top;
 		cursor: pointer;
 		text-align: center;
