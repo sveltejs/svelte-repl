@@ -8,6 +8,7 @@
 	import Output from './Output/index.svelte';
 	import InputOutputToggle from './InputOutputToggle.svelte';
 	import Bundler from './Bundler.js';
+	import { is_browser } from './env.js';
 
 	export let svelteUrl = 'https://unpkg.com/svelte';
 	export let rollupUrl = 'https://unpkg.com/rollup/dist/rollup.browser.js';
@@ -29,14 +30,17 @@
 		};
 	}
 
-	export function set(data) {
+	export async function set(data) {
 		components.set(data.components);
 		selected.set(data.components[0]);
 
+		rebundle();
+
+		await module_editor_ready;
+		await output_ready;
+
 		module_editor.set($selected.source, $selected.type);
 		output.set($selected, $compile_options);
-
-		rebundle();
 	}
 
 	export function update(data) {
@@ -82,6 +86,14 @@
 		if (result && token === current_token) bundle.set(result);
 	}
 
+	// TODO this is a horrible kludge, written in a panic. fix it
+	let fulfil_module_editor_ready;
+	let module_editor_ready = new Promise(f => fulfil_module_editor_ready = f);
+
+	let fulfil_output_ready;
+	let output_ready = new Promise(f => fulfil_output_ready = f);
+
+
 	setContext('REPL', {
 		components,
 		selected,
@@ -126,10 +138,12 @@
 
 		register_module_editor(editor) {
 			module_editor = editor;
+			fulfil_module_editor_ready();
 		},
 
 		register_output(handlers) {
 			output = handlers;
+			fulfil_output_ready();
 		},
 
 		request_focus() {
@@ -149,10 +163,10 @@
 	let sourceErrorLoc;
 	let runtimeErrorLoc; // TODO refactor this stuff — runtimeErrorLoc is unused
 
-	let width = typeof window !== 'undefined' ? window.innerWidth : 300;
+	let width = is_browser ? window.innerWidth : 300;
 	let show_output = false;
 
-	const bundler = typeof window !== 'undefined' && new Bundler(svelteUrl, rollupUrl);
+	const bundler = is_browser && new Bundler(svelteUrl, rollupUrl);
 
 	$: if (output && $selected) {
 		output.update($selected, $compile_options);
