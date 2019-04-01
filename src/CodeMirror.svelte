@@ -199,7 +199,6 @@
 
 	.codemirror-container :global(.CodeMirror) {
 		height: 100%;
-		/* background: var(--background); */
 		background: transparent;
 		font: 400 14px/1.7 var(--font-mono);
 		color: var(--base);

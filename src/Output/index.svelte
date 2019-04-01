@@ -69,13 +69,14 @@
 		position: relative;
 		font: 400 12px/1.5 var(--font);
 		border: none;
-		border-bottom: var(--border-w) solid transparent;
+		border-bottom: 3px solid transparent;
 		padding: 12px 12px 8px 12px;
 		color: #999;
+		border-radius: 0;
 	}
 
 	button.active {
-		border-bottom: var(--border-w) solid var(--prime);
+		border-bottom: 3px solid var(--prime);
 		color: #333;
 	}
 
