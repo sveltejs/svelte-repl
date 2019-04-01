@@ -6,7 +6,6 @@
 	import ComponentSelector from './Input/ComponentSelector.svelte';
 	import ModuleEditor from './Input/ModuleEditor.svelte';
 	import Output from './Output/index.svelte';
-	import InputOutputToggle from './InputOutputToggle.svelte';
 	import Bundler from './Bundler.js';
 	import { is_browser } from './env.js';
 
@@ -246,5 +245,3 @@
 		</SplitPane>
 	</div>
 </div>
-
-<InputOutputToggle bind:checked={show_output}/>
