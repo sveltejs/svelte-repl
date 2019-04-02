@@ -17,7 +17,8 @@
 	}
 
 	export let relaxed = false;
-	export let setup;
+	export let injectedJS = '';
+	export let injectedCSS = '';
 
 	let iframe;
 	let pending_imports = 0;
@@ -57,7 +58,9 @@
 			if (token !== current_token) return;
 
 			await proxy.eval(`
-				${setup}
+				${injectedJS}
+
+				${styles}
 
 				const styles = document.querySelectorAll('style[id^=svelte-]');
 
@@ -98,6 +101,12 @@
 	}
 
 	$: if (ready) apply_bundle($bundle);
+
+	$: styles = injectedCSS && `{
+		const style = document.createElement('style');
+		style.textContent = ${JSON.stringify(injectedCSS)};
+		document.head.appendChild(style);
+	}`;
 </script>
 
 <style>

@@ -14,7 +14,8 @@
 	export let embedded = false;
 	export let orientation = 'columns';
 	export let relaxed = false;
-	export let setup = '';
+	export let injectedJS = '';
+	export let injectedCSS = '';
 
 	export function toJSON() {
 		// TODO there's a bug here — Svelte hoists this function because
@@ -38,6 +39,7 @@
 		await module_editor_ready;
 		await output_ready;
 
+		injectedCSS = data.css || '';
 		module_editor.set($selected.source, $selected.type);
 		output.set($selected, $compile_options);
 	}
@@ -49,6 +51,8 @@
 
 		const matched_component = data.components.find(file => file.name === name && file.type === type);
 		selected.set(matched_component || data.components[0]);
+
+		injectedCSS = data.css || '';
 
 		if (matched_component) {
 			module_editor.update(matched_component.source);
@@ -240,7 +244,7 @@
 			</section>
 
 			<section slot=b style='height: 100%;'>
-				<Output {svelteUrl} {embedded} {relaxed} {setup}/>
+				<Output {svelteUrl} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
 			</section>
 		</SplitPane>
 	</div>

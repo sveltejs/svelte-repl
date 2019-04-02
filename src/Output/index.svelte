@@ -14,7 +14,8 @@
 	export let runtimeError = null;
 	export let embedded = false;
 	export let relaxed = false;
-	export let setup;
+	export let injectedJS;
+	export let injectedCSS;
 
 	let foo; // TODO workaround for https://github.com/sveltejs/svelte/issues/2122
 
@@ -129,7 +130,8 @@
 		bind:this={viewer}
 		bind:error={runtimeError}
 		{relaxed}
-		{setup}
+		{injectedJS}
+		{injectedCSS}
 	/>
 </div>
 

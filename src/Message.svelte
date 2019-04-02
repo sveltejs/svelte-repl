@@ -40,15 +40,18 @@
 		content: '!';
 		position: absolute;
 		left: 12px;
-		top: 11px;
-		width: 1px;
-		height: 1px;
+		top: 8px;
 		text-align: center;
 		line-height: 1;
 		padding: 4px;
 		border-radius: 50%;
 		color: white;
 		border: 2px solid white;
+		box-sizing: content-box;
+		width: 10px;
+		height: 10px;
+		font-size: 11px;
+		font-weight: 700;
 	}
 
 	p {
