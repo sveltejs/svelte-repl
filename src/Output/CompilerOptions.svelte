@@ -7,16 +7,17 @@
 <style>
 	.options {
 		padding: 0 10px;
-		font-family: var(--font-ui);
+		font-family: var(--font-mono);
 		font-size: 13px;
 		color: #999;
+		line-height: 1.8;
 	}
 
 	.option {
 		display: block;
 		padding: 0 0 0 1.25em;
 		white-space: nowrap;
-		color: var(--text);
+		color: #333;
 		user-select: none;
 	}
 

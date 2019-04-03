@@ -124,13 +124,13 @@
 		if (_CodeMirror) {
 			CodeMirror = _CodeMirror;
 			createEditor(mode || 'svelte').then(() => {
-				editor.setValue(code || '');
+				if (editor) editor.setValue(code || '');
 			});
 		} else {
 			codemirror_promise.then(async mod => {
 				CodeMirror = mod.default;
 				await createEditor(mode || 'svelte');
-				editor.setValue(code || '');
+				if (editor) editor.setValue(code || '');
 			});
 		}
 

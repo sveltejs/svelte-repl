@@ -28,6 +28,7 @@
 			}
 
 			const compiled = await compiler.compile(selected, options);
+			if (!js_editor) return; // unmounted
 
 			js_editor.set(compiled.js, 'js');
 			css_editor.set(compiled.css, 'css');
@@ -37,6 +38,7 @@
 			if (selected.type === 'js') return;
 
 			const compiled = await compiler.compile(selected, options);
+			if (!js_editor) return; // unmounted
 
 			js_editor.update(compiled.js);
 			css_editor.update(compiled.css);
