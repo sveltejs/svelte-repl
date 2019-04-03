@@ -9,7 +9,6 @@
 
 	let editor;
 	onMount(() => {
-		console.log(`mounting`);
 		register_module_editor(editor);
 	});
 
