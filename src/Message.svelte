@@ -40,7 +40,7 @@
 		content: '!';
 		position: absolute;
 		left: 12px;
-		top: 8px;
+		top: 10px;
 		text-align: center;
 		line-height: 1;
 		padding: 4px;

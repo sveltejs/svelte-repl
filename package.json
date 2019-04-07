@@ -5,27 +5,15 @@
   "main": "src/Repl.svelte",
   "svelte": "src/Repl.svelte",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -cw",
-    "prepublishOnly": "npm test",
+    "srcdoc:update": "curl https://raw.githubusercontent.com/sveltejs/template/v3/public/global.css > src/Output/srcdoc/styles.css",
+    "srcdoc": "npm run srcdoc:update && node scripts/build-srcdoc.js",
+    "prepublishOnly": "npm run srcdoc && npm test",
     "test": "echo \"no tests yet\"",
-    "test:browser": "npm run build && serve test/public",
     "lint": "eslint src/**.svelte src/**.js"
   },
   "devDependencies": {
     "eslint": "^5.12.1",
-    "eslint-plugin-svelte3": "^0.4.4",
-    "port-authority": "^1.0.5",
-    "puppeteer": "^1.9.0",
-    "rollup": "^1.1.2",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-svelte": "^5.0.1",
-    "sirv": "^0.2.2",
-    "svelte": "^3.0.0-beta.21",
-    "tap-diff": "^0.1.1",
-    "tap-dot": "^2.0.0",
-    "tape-modern": "^1.1.1"
+    "eslint-plugin-svelte3": "^0.4.4"
   },
   "repository": "https://github.com/sveltejs/svelte-repl",
   "author": "Rich Harris",
