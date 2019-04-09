@@ -7,7 +7,6 @@
 	export let type;
 	export let pos = 50;
 	export let fixed = false;
-	export let fixed_pos = pos;
 	export let min = 50;
 	// export let min1 = min;
 	// export let min2 = min;
@@ -146,11 +145,11 @@
 </style>
 
 <div class="container" bind:this={refs.container}>
-	<div class="pane" style="{dimension}: {fixed ? fixed_pos : pos}%;">
+	<div class="pane" style="{dimension}: {pos}%;">
 		<slot name="a"></slot>
 	</div>
 
-	<div class="pane" style="{dimension}: {100 - (fixed ? fixed_pos : pos)}%;">
+	<div class="pane" style="{dimension}: {100 - (pos)}%;">
 		<slot name="b"></slot>
 	</div>
 

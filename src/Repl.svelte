@@ -14,6 +14,8 @@
 	export let embedded = false;
 	export let orientation = 'columns';
 	export let relaxed = false;
+	export let fixed = false;
+	export let fixedPos = 50;
 	export let injectedJS = '';
 	export let injectedCSS = '';
 
@@ -166,9 +168,6 @@
 	let sourceErrorLoc;
 	let runtimeErrorLoc; // TODO refactor this stuff — runtimeErrorLoc is unused
 
-	let width = is_browser ? window.innerWidth : 300;
-	let show_output = false;
-
 	const bundler = is_browser && new Bundler(svelteUrl, rollupUrl);
 
 	$: if (output && $selected) {
@@ -180,23 +179,17 @@
 	.container {
 		position: relative;
 		width: 100%;
-		height: calc(100% - 42px);
-	}
-
-	.repl-inner {
-		width: 200%;
 		height: 100%;
-		transition: transform 0.3s;
 	}
 
-	.repl-inner :global(section) {
+	.container :global(section) {
 		position: relative;
 		padding: 42px 0 0 0;
 		height: 100%;
 		box-sizing: border-box;
 	}
 
-	.repl-inner :global(section) > :global(*):first-child {
+	.container :global(section) > :global(*):first-child {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -205,47 +198,25 @@
 		box-sizing: border-box;
 	}
 
-	.repl-inner :global(section) > :global(*):last-child {
+	.container :global(section) > :global(*):last-child {
 		width: 100%;
 		height: 100%;
 	}
-
-	.offset {
-		transform: translate(-50%,0);
-	}
-
-	@media (min-width: 600px) {
-		.container {
-			height: 100%;
-		}
-
-		.repl-inner {
-			width: 100%;
-		}
-
-		.offset {
-			transition: none;
-			transform: none;
-		}
-	}
 </style>
 
-<div class="container" class:orientation bind:clientWidth={width}>
-	<div class="repl-inner" class:offset="{show_output}">
-		<SplitPane
-			type="{orientation === 'rows' ? 'vertical' : 'horizontal'}"
-			fixed="{600 > width}"
-			pos="{orientation === 'rows' ? 50 : 60}"
-			fixed_pos={50}
-		>
-			<section slot=a>
-				<ComponentSelector {handle_select}/>
-				<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}"/>
-			</section>
+<div class="container" class:orientation>
+	<SplitPane
+		type="{orientation === 'rows' ? 'vertical' : 'horizontal'}"
+		pos="{fixed ? fixedPos : orientation === 'rows' ? 50 : 60}"
+		{fixed}
+	>
+		<section slot=a>
+			<ComponentSelector {handle_select}/>
+			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}"/>
+		</section>
 
-			<section slot=b style='height: 100%;'>
-				<Output {svelteUrl} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
-			</section>
-		</SplitPane>
-	</div>
+		<section slot=b style='height: 100%;'>
+			<Output {svelteUrl} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
+		</section>
+	</SplitPane>
 </div>

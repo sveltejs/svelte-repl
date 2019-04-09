@@ -30,13 +30,11 @@
 		flex: 1 1 auto;
 	}
 
-	@media (min-width: 600px) {
-		:global(.columns) .editor-wrapper {
-			/* make it easier to interact with scrollbar */
-			padding-right: 8px;
-			height: auto;
-			/* height: 100%; */
-		}
+	:global(.columns) .editor-wrapper {
+		/* make it easier to interact with scrollbar */
+		padding-right: 8px;
+		height: auto;
+		/* height: 100%; */
 	}
 </style>
 
