@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "eslint": "^5.12.1",
-    "eslint-plugin-svelte3": "^0.4.4"
+    "eslint-plugin-svelte3": "^0.4.4",
+    "svelte": "^3.0.0-beta.22"
   },
   "repository": "https://github.com/sveltejs/svelte-repl",
   "author": "Rich Harris",
@@ -28,6 +29,7 @@
   ],
   "dependencies": {
     "codemirror": "^5.45.0",
+    "sourcemap-codec": "^1.4.4",
     "yootils": "0.0.15"
   }
 }
