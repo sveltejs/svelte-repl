@@ -12,8 +12,6 @@
 	// export let min2 = min;
 
 	const refs = {};
-	const side = type === 'horizontal' ? 'left' : 'top';
-	const dimension = type === 'horizontal' ? 'width' : 'height';
 
 	let dragging = false;
 
@@ -60,6 +58,9 @@
 			}
 		};
 	}
+
+	$: side = type === 'horizontal' ? 'left' : 'top';
+	$: dimension = type === 'horizontal' ? 'width' : 'height';
 </script>
 
 <style>
