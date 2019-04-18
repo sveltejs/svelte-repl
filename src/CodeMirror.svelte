@@ -140,6 +140,8 @@
 		}
 	});
 
+	let first = true;
+
 	async function createEditor(mode) {
 		if (destroyed || !CodeMirror) return;
 
@@ -165,7 +167,7 @@
 
 		// Creating a text editor is a lot of work, so we yield
 		// the main thread for a moment. This helps reduce jank
-		await sleep(50);
+		if (first) await sleep(50);
 
 		if (destroyed) return;
 
@@ -178,8 +180,10 @@
 			}
 		});
 
-		await sleep(50);
+		if (first) await sleep(50);
 		editor.refresh();
+
+		first = false;
 	}
 
 	function sleep(ms) {

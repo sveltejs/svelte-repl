@@ -1,6 +1,6 @@
 {
   "name": "@sveltejs/svelte-repl",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "The <Repl> component used on the Svelte website",
   "main": "src/Repl.svelte",
   "svelte": "src/Repl.svelte",
@@ -14,7 +14,8 @@
   "devDependencies": {
     "eslint": "^5.12.1",
     "eslint-plugin-svelte3": "^0.4.4",
-    "svelte": "^3.0.0-beta.22"
+    "svelte": "^3.0.0-beta.28",
+    "yootils": "0.0.15"
   },
   "repository": "https://github.com/sveltejs/svelte-repl",
   "author": "Rich Harris",
@@ -29,7 +30,6 @@
   ],
   "dependencies": {
     "codemirror": "^5.45.0",
-    "sourcemap-codec": "^1.4.4",
-    "yootils": "0.0.15"
+    "sourcemap-codec": "^1.4.4"
   }
 }
