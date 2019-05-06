@@ -18,6 +18,7 @@
 	export let fixedPos = 50;
 	export let injectedJS = '';
 	export let injectedCSS = '';
+	export let scrollOnNewTab = true;
 
 	export function toJSON() {
 		// TODO there's a bug here — Svelte hoists this function because
@@ -211,7 +212,7 @@
 		{fixed}
 	>
 		<section slot=a>
-			<ComponentSelector {handle_select}/>
+			<ComponentSelector {handle_select} {scrollOnNewTab}/>
 			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}"/>
 		</section>
 
