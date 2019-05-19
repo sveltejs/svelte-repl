@@ -157,7 +157,8 @@
 			mode: modes[mode] || {
 				name: mode
 			},
-			readOnly: readonly
+			readOnly: readonly,
+			autoCloseBrackets: true
 		};
 
 		if (!tab) opts.extraKeys = {
