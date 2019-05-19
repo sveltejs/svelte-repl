@@ -158,6 +158,7 @@
 				name: mode
 			},
 			readOnly: readonly,
+			autoCloseBrackets: true,
 			autoCloseTags: true
 		};
 
