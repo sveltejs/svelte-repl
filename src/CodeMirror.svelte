@@ -158,7 +158,8 @@
 				name: mode
 			},
 			readOnly: readonly,
-			autoCloseBrackets: true
+			autoCloseBrackets: true,
+			autoCloseTags: true
 		};
 
 		if (!tab) opts.extraKeys = {
