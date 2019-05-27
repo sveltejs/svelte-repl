@@ -1,6 +1,6 @@
 # @sveltejs/svelte-repl
 
-This is the guts of https://v3.svelte.technology/repl, extracted into its own package so that it can be used elsewhere.
+This is the guts of https://svelte.dev/repl, extracted into its own package so that it can be used elsewhere.
 
 ## TODO
 

@@ -89,6 +89,10 @@
 		height: 100%;
 	}
 
+	section[slot] {
+		overflow: auto;
+	}
+
 	h3 {
 		font: 700 12px/1.5 var(--font);
 		padding: 12px 0 8px 10px;
