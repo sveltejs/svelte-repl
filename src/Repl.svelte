@@ -9,6 +9,7 @@
 	import Bundler from './Bundler.js';
 	import { is_browser } from './env.js';
 
+	export let workersUrl;
 	export let svelteUrl = 'https://unpkg.com/svelte';
 	export let rollupUrl = 'https://unpkg.com/rollup/dist/rollup.browser.js';
 	export let embedded = false;
@@ -63,6 +64,10 @@
 			module_editor.set(matched_component.source, matched_component.type);
 			output.set(matched_component, $compile_options);
 		}
+	}
+
+	if (!workersUrl) {
+		throw new Error(`You must supply workersUrl prop to <Repl>`);
 	}
 
 	const dispatch = createEventDispatcher();
@@ -168,7 +173,7 @@
 	let sourceErrorLoc;
 	let runtimeErrorLoc; // TODO refactor this stuff — runtimeErrorLoc is unused
 
-	const bundler = is_browser && new Bundler(svelteUrl, rollupUrl);
+	const bundler = is_browser && new Bundler(workersUrl, svelteUrl, rollupUrl);
 
 	$: if (output && $selected) {
 		output.update($selected, $compile_options);
@@ -216,7 +221,7 @@
 		</section>
 
 		<section slot=b style='height: 100%;'>
-			<Output {svelteUrl} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
+			<Output {svelteUrl} {workersUrl} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
 		</section>
 	</SplitPane>
 </div>

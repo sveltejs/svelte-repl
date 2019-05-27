@@ -10,6 +10,7 @@
 	const { register_output } = getContext('REPL');
 
 	export let svelteUrl;
+	export let workersUrl;
 	export let sourceErrorLoc = null;
 	export let runtimeError = null;
 	export let embedded = false;
@@ -45,7 +46,7 @@
 		}
 	});
 
-	const compiler = is_browser && new Compiler(svelteUrl);
+	const compiler = is_browser && new Compiler(workersUrl, svelteUrl);
 
 	// refs
 	let viewer;

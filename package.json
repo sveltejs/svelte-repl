@@ -5,6 +5,8 @@
   "main": "src/Repl.svelte",
   "svelte": "src/Repl.svelte",
   "scripts": {
+    "dev": "rollup -cw",
+    "build": "rollup -c",
     "srcdoc:update": "curl https://raw.githubusercontent.com/sveltejs/template/v3/public/global.css > src/Output/srcdoc/styles.css",
     "srcdoc": "npm run srcdoc:update && node scripts/build-srcdoc.js",
     "prepublishOnly": "npm run srcdoc && npm test",
@@ -14,6 +16,10 @@
   "devDependencies": {
     "eslint": "^5.12.1",
     "eslint-plugin-svelte3": "^0.4.4",
+    "rollup": "^1.12.4",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.0.0",
+    "rollup-plugin-terser": "^5.0.0",
     "svelte": "^3.0.0-beta.28",
     "yootils": "0.0.15"
   },
@@ -25,6 +31,7 @@
   ],
   "files": [
     "src",
+    "workers",
     "index.mjs",
     "index.js"
   ],
