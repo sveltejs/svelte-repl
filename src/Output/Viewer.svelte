@@ -16,6 +16,7 @@
 		proxy.setProp(prop, value);
 	}
 
+	export let fetching;
 	export let relaxed = false;
 	export let injectedJS = '';
 	export let injectedCSS = '';
@@ -153,9 +154,8 @@
 			<Message kind="error" details={error}/>
 		{:else if !$bundle}
 			<Message kind="info">loading Svelte compiler...</Message>
-		{:else if pending_imports}
-			<Message kind="info">loading {pending_imports} {pending_imports === 1 ? 'dependency' : 'dependencies'} from
-			https://bundle.run</Message>
+		{:else if fetching}
+			<Message kind="info">fetching {fetching}</Message>
 		{/if}
 	</div>
 </div>

@@ -1,1 +1,59 @@
-!function(){"use strict";let e;self.window=self;const s=new Promise(s=>{e=s});self.addEventListener("message",async c=>{switch(c.data.type){case"init":importScripts(`${c.data.svelteUrl}/compiler.js`),e();break;case"compile":await s,postMessage(function({id:e,source:s,options:c}){try{const{js:n,css:i}=svelte.compile(s,Object.assign({},t,c));return{id:e,result:{js:n.code,css:i.code||"/* Add a <style> tag to see compiled CSS */"}}}catch(s){let t=`/* Error compiling component\n\n${s.message}`;return s.frame&&(t+=`\n${s.frame}`),{id:e,result:{js:t+="\n\n*/",css:t}}}}(c.data))}});const t={dev:!1,css:!1}}();
+(function () {
+	'use strict';
+
+	self.window = self; // egregious hack to get magic-string to work in a worker
+
+	let fulfil_ready;
+	const ready = new Promise(f => {
+		fulfil_ready = f;
+	});
+
+	self.addEventListener('message', async event => {
+		switch (event.data.type) {
+			case 'init':
+				importScripts(`${event.data.svelteUrl}/compiler.js`);
+				fulfil_ready();
+				break;
+
+			case 'compile':
+				await ready;
+				postMessage(compile(event.data));
+				break;
+		}
+	});
+
+	const common_options = {
+		dev: false,
+		css: false
+	};
+
+	function compile({ id, source, options }) {
+		try {
+			const { js, css } = svelte.compile(
+				source,
+				Object.assign({}, common_options, options)
+			);
+
+			return {
+				id,
+				result: {
+					js: js.code,
+					css: css.code || `/* Add a <sty` + `le> tag to see compiled CSS */`
+				}
+			};
+		} catch (err) {
+			let message = `/* Error compiling component\n\n${err.message}`;
+			if (err.frame) message += `\n${err.frame}`;
+			message += `\n\n*/`;
+
+			return {
+				id,
+				result: {
+					js: message,
+					css: message
+				}
+			};
+		}
+	}
+
+}());

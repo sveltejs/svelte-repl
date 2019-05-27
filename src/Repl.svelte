@@ -167,13 +167,18 @@
 		output.set($selected, $compile_options);
 	}
 
-	let workers;
-
 	let input;
 	let sourceErrorLoc;
 	let runtimeErrorLoc; // TODO refactor this stuff — runtimeErrorLoc is unused
+	let fetching = null;
 
-	const bundler = is_browser && new Bundler(workersUrl, svelteUrl, rollupUrl);
+	const bundler = is_browser && new Bundler({
+		workersUrl,
+		svelteUrl,
+		onfetch: url => {
+			fetching = url;
+		}
+	});
 
 	$: if (output && $selected) {
 		output.update($selected, $compile_options);
@@ -221,7 +226,7 @@
 		</section>
 
 		<section slot=b style='height: 100%;'>
-			<Output {svelteUrl} {workersUrl} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
+			<Output {svelteUrl} {workersUrl} {fetching} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
 		</section>
 	</SplitPane>
 </div>

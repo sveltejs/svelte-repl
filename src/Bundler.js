@@ -3,10 +3,10 @@ const workers = new Map();
 let uid = 1;
 
 export default class Bundler {
-	constructor(workersUrl, svelteUrl, rollupUrl) {
+	constructor({ workersUrl, svelteUrl, onfetch }) {
 		if (!workers.has(svelteUrl)) {
 			const worker = new Worker(`${workersUrl}/bundler.js`);
-			worker.postMessage({ type: 'init', svelteUrl, rollupUrl });
+			worker.postMessage({ type: 'init', svelteUrl });
 			workers.set(svelteUrl, worker);
 		}
 
@@ -15,9 +15,15 @@ export default class Bundler {
 		this.handlers = new Map();
 
 		this.worker.addEventListener('message', event => {
+			if (event.data.type === 'fetch') {
+				onfetch(event.data.url);
+				return;
+			}
+
 			const handler = this.handlers.get(event.data.id);
 
 			if (handler) { // if no handler, was meant for a different REPL
+				onfetch(null);
 				handler(event.data);
 				this.handlers.delete(event.data.id);
 			}

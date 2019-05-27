@@ -1,6 +1,7 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import json from 'rollup-plugin-json';
 import { terser } from 'rollup-plugin-terser';
+
+const dev = process.env.ROLLUP_WATCH;
 
 // bundle workers
 export default ['compiler', 'bundler'].map(x => ({
@@ -11,7 +12,7 @@ export default ['compiler', 'bundler'].map(x => ({
 	},
 	plugins: [
 		resolve(),
-		commonjs(),
-		terser()
+		json(),
+		!dev && terser()
 	]
 }));
