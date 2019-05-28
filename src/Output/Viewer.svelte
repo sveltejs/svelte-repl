@@ -47,17 +47,10 @@
 		}
 	});
 
-	let current_token;
-
 	async function apply_bundle($bundle) {
 		if (!$bundle || $bundle.error) return;
 
-		const token = current_token = {};
-
 		try {
-			await proxy.fetch_imports($bundle.imports, $bundle.import_map);
-			if (token !== current_token) return;
-
 			await proxy.eval(`
 				${injectedJS}
 
