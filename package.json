@@ -20,8 +20,7 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-terser": "^5.0.0",
-    "svelte": "^3.0.0-beta.28",
-    "yootils": "0.0.15"
+    "svelte": "^3.0.0-beta.28"
   },
   "repository": "https://github.com/sveltejs/svelte-repl",
   "author": "Rich Harris",
@@ -36,6 +35,7 @@
   "dependencies": {
     "codemirror": "^5.45.0",
     "estree-walker": "^0.6.0",
-    "sourcemap-codec": "^1.4.4"
+    "sourcemap-codec": "^1.4.4",
+    "yootils": "0.0.15"
   }
 }
