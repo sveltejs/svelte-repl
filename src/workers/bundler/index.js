@@ -81,6 +81,7 @@ async function follow_redirects(url) {
 async function get_bundle(uid, mode, cache, lookup) {
 	let bundle;
 
+	const imports = new Set();
 	const warnings = [];
 	const all_warnings = [];
 
@@ -118,6 +119,11 @@ async function get_bundle(uid, mode, cache, lookup) {
 			else {
 				// fetch from unpkg
 				self.postMessage({ type: 'status', message: `resolving ${importee}` });
+
+				if (importer in lookup) {
+					const match = /^(@[^/]+\/)?[^/]+/.exec(importee);
+					if (match) imports.add(match[0]);
+				}
 
 				try {
 					const pkg_url = await follow_redirects(`https://unpkg.com/${importee}/package.json`);
@@ -197,9 +203,9 @@ async function get_bundle(uid, mode, cache, lookup) {
 			}
 		});
 
-		return { bundle, cache: new_cache, error: null, warnings, all_warnings };
+		return { bundle, imports: Array.from(imports), cache: new_cache, error: null, warnings, all_warnings };
 	} catch (error) {
-		return { error, bundle: null, cache: new_cache, warnings, all_warnings };
+		return { error, imports: null, bundle: null, cache: new_cache, warnings, all_warnings };
 	}
 }
 
@@ -255,6 +261,7 @@ async function bundle({ uid, components }) {
 			uid,
 			dom: dom_result,
 			ssr: ssr_result,
+			imports: dom.imports,
 			warnings: dom.warnings,
 			error: null
 		};
@@ -268,6 +275,7 @@ async function bundle({ uid, components }) {
 			uid,
 			dom: null,
 			ssr: null,
+			imports: null,
 			warnings: dom.warnings,
 			error: Object.assign({}, e, {
 				message: e.message,
