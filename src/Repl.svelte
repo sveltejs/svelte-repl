@@ -170,13 +170,13 @@
 	let input;
 	let sourceErrorLoc;
 	let runtimeErrorLoc; // TODO refactor this stuff — runtimeErrorLoc is unused
-	let fetching = null;
+	let status = null;
 
 	const bundler = is_browser && new Bundler({
 		workersUrl,
 		svelteUrl,
-		onfetch: url => {
-			fetching = url;
+		onstatus: message => {
+			status = message;
 		}
 	});
 
@@ -226,7 +226,7 @@
 		</section>
 
 		<section slot=b style='height: 100%;'>
-			<Output {svelteUrl} {workersUrl} {fetching} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
+			<Output {svelteUrl} {workersUrl} {status} {embedded} {relaxed} {injectedJS} {injectedCSS}/>
 		</section>
 	</SplitPane>
 </div>

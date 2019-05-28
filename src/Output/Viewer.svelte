@@ -16,7 +16,7 @@
 		proxy.setProp(prop, value);
 	}
 
-	export let fetching;
+	export let status;
 	export let relaxed = false;
 	export let injectedJS = '';
 	export let injectedCSS = '';
@@ -145,10 +145,10 @@
 	<div class="overlay">
 		{#if error}
 			<Message kind="error" details={error}/>
+		{:else if status}
+			<Message kind="info">{status}</Message>
 		{:else if !$bundle}
 			<Message kind="info">loading Svelte compiler...</Message>
-		{:else if fetching}
-			<Message kind="info">fetching {fetching}</Message>
 		{/if}
 	</div>
 </div>

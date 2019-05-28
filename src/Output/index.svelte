@@ -11,7 +11,7 @@
 
 	export let svelteUrl;
 	export let workersUrl;
-	export let fetching;
+	export let status;
 	export let sourceErrorLoc = null;
 	export let runtimeError = null;
 	export let embedded = false;
@@ -137,7 +137,7 @@
 	<Viewer
 		bind:this={viewer}
 		bind:error={runtimeError}
-		{fetching}
+		{status}
 		{relaxed}
 		{injectedJS}
 		{injectedCSS}

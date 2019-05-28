@@ -6,6 +6,7 @@ import json from './plugins/json.js';
 self.window = self; // egregious hack to get magic-string to work in a worker
 
 let svelteUrl;
+let current_id;
 
 self.addEventListener('message', async event => {
 	switch (event.data.type) {
@@ -16,12 +17,16 @@ self.addEventListener('message', async event => {
 			break;
 
 		case 'bundle':
-			if (event.data.components.length === 0) return;
+			const { uid, components } = event.data;
 
-			const result = await bundle(event.data);
-			if (result) {
-				postMessage(result);
-			}
+			if (components.length === 0) return;
+
+			current_id = uid;
+
+			const result = await bundle({ uid, components });
+
+			if (result.error === ABORT) return;
+			if (result && uid === current_id) postMessage(result);
 
 			break;
 	}
@@ -35,6 +40,8 @@ let cached = {
 	dom: {},
 	ssr: {}
 };
+
+const ABORT = { aborted: true };
 
 const fetch_cache = new Map();
 function fetch_if_uncached(url) {
@@ -67,14 +74,18 @@ async function follow_redirects(url) {
 	return res.url;
 }
 
-async function get_bundle(mode, cache, lookup) {
+async function get_bundle(uid, mode, cache, lookup) {
 	let bundle;
+
+	const warnings = [];
 	const all_warnings = [];
 
 	const new_cache = {};
 
 	const repl_plugin = {
 		async resolveId(importee, importer) {
+			if (uid !== current_id) throw ABORT;
+
 			// importing from Svelte
 			if (importee === `svelte`) return `${svelteUrl}/index.mjs`;
 			if (importee.startsWith(`svelte/`)) return `${svelteUrl}/${importee.slice(7)}.mjs`;
@@ -94,11 +105,16 @@ async function get_bundle(mode, cache, lookup) {
 
 			// importing from (probably) unpkg
 			if (importee.startsWith('.')) {
-				return await follow_redirects(new URL(importee, importer).href);
+				const url = new URL(importee, importer).href;
+				self.postMessage({ type: 'status', message: `resolving ${url}` });
+
+				return await follow_redirects(url);
 			}
 
 			else {
 				// fetch from unpkg
+				self.postMessage({ type: 'status', message: `resolving ${importee}` });
+
 				try {
 					const pkg_url = await follow_redirects(`https://unpkg.com/${importee}/package.json`);
 					const pkg_json = (await fetch_if_uncached(pkg_url)).body;
@@ -115,20 +131,23 @@ async function get_bundle(mode, cache, lookup) {
 				return await follow_redirects(`https://unpkg.com/${importee}`);
 			}
 		},
-		async load(id) {
-			if (id in lookup) return lookup[id].source;
+		async load(resolved) {
+			if (uid !== current_id) throw ABORT;
 
-			if (!fetch_cache.has(id)) {
-				self.postMessage({
-					type: 'fetch',
-					url: id
-				});
+			if (resolved in lookup) return lookup[resolved].source;
+
+			if (!fetch_cache.has(resolved)) {
+				self.postMessage({ type: 'status', message: `fetching ${resolved}` });
 			}
 
-			const res = await fetch_if_uncached(id);
+			const res = await fetch_if_uncached(resolved);
 			return res.body;
 		},
 		transform(code, id) {
+			if (uid !== current_id) throw ABORT;
+
+			self.postMessage({ type: 'status', message: `bundling ${id}` });
+
 			if (!/\.svelte$/.test(id)) return null;
 
 			const name = id.split('/').pop().split('.')[0];
@@ -145,7 +164,7 @@ async function get_bundle(mode, cache, lookup) {
 			new_cache[id] = { code, result };
 
 			(result.warnings || result.stats.warnings).forEach(warning => { // TODO remove stats post-launch
-				all_warnings.push({
+				warnings.push({
 					message: warning.message,
 					filename: warning.filename,
 					start: warning.start,
@@ -173,14 +192,14 @@ async function get_bundle(mode, cache, lookup) {
 				});
 			}
 		});
-	} catch (error) {
-		return { error, bundle: null, cache: new_cache, warnings: all_warnings };
-	}
 
-	return { bundle, cache: new_cache, error: null, warnings: all_warnings };
+		return { bundle, cache: new_cache, error: null, warnings, all_warnings };
+	} catch (error) {
+		return { error, bundle: null, cache: new_cache, warnings, all_warnings };
+	}
 }
 
-async function bundle({ id, components }) {
+async function bundle({ uid, components }) {
 	console.clear();
 	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
 
@@ -190,34 +209,26 @@ async function bundle({ id, components }) {
 		lookup[path] = component;
 	});
 
-	const import_map = new Map();
 	let dom;
 	let error;
 
 	try {
-		dom = await get_bundle('dom', cached.dom, lookup);
+		dom = await get_bundle(uid, 'dom', cached.dom, lookup);
 		if (dom.error) {
 			throw dom.error;
 		}
 
 		cached.dom = dom.cache;
 
-		let uid = 1;
-
 		const dom_result = (await dom.bundle.generate({
 			format: 'iife',
 			name: 'SvelteComponent',
-			globals: id => {
-				const name = `import_${uid++}`;
-				import_map.set(id, name);
-				return name;
-			},
 			exports: 'named',
 			sourcemap: true
 		})).output[0];
 
 		const ssr = false // TODO how can we do SSR?
-			? await get_bundle('ssr', cached.ssr, lookup)
+			? await get_bundle(uid, 'ssr', cached.ssr, lookup)
 			: null;
 
 		if (ssr) {
@@ -231,29 +242,26 @@ async function bundle({ id, components }) {
 			? (await ssr.bundle.generate({
 				format: 'iife',
 				name: 'SvelteComponent',
-				globals: id => import_map.get(id),
 				exports: 'named',
 				sourcemap: true
 			})).output[0]
 			: null;
 
 		return {
-			id,
-			imports: dom_result.imports,
-			import_map,
+			uid,
 			dom: dom_result,
 			ssr: ssr_result,
 			warnings: dom.warnings,
 			error: null
 		};
 	} catch (err) {
+		console.error(err);
+
 		const e = error || err;
 		delete e.toString;
 
 		return {
-			id,
-			imports: [],
-			import_map,
+			uid,
 			dom: null,
 			ssr: null,
 			warnings: dom.warnings,
