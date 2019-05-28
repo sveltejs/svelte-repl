@@ -1,6 +1,6 @@
 {
   "name": "@sveltejs/svelte-repl",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "description": "The <Repl> component used on the Svelte website",
   "main": "src/Repl.svelte",
   "svelte": "src/Repl.svelte",
@@ -32,9 +32,7 @@
   ],
   "files": [
     "src",
-    "workers",
-    "index.mjs",
-    "index.js"
+    "workers"
   ],
   "dependencies": {
     "codemirror": "^5.45.0",
