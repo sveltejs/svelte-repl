@@ -145,10 +145,8 @@
 	<div class="overlay">
 		{#if error}
 			<Message kind="error" details={error}/>
-		{:else if status}
-			<Message kind="info">{status}</Message>
-		{:else if !$bundle}
-			<Message kind="info">loading Svelte compiler...</Message>
+		{:else if status || !$bundle}
+			<Message kind="info" truncate>{status || 'loading Svelte compiler...'}</Message>
 		{/if}
 	</div>
 </div>

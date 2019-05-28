@@ -7,6 +7,7 @@
 	export let kind;
 	export let details = null;
 	export let filename = null;
+	export let truncate;
 
 	function message(details) {
 		let str = details.message || '[missing message]';
@@ -55,6 +56,12 @@
 		font-weight: 700;
 	}
 
+	.truncate {
+		white-space: pre;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+	}
+
 	p {
 		margin: 0;
 	}
@@ -72,7 +79,7 @@
 	}
 </style>
 
-<div in:slide={{delay: 150, duration: 100}} out:slide={{duration: 100}} class="message {kind}">
+<div in:slide={{delay: 150, duration: 100}} out:slide={{duration: 100}} class="message {kind}" class:truncate>
 	{#if details}
 		<p
 			class:navigable={details.filename}
