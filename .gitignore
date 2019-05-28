@@ -2,3 +2,4 @@
 node_modules
 /src/Output/srcdoc/styles.css
 /src/Output/srcdoc/index.js
+/workers
