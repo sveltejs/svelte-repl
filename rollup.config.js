@@ -1,19 +1,19 @@
-import svelte from 'rollup-plugin-svelte';
 import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import json from 'rollup-plugin-json';
+import { terser } from 'rollup-plugin-terser';
 
-export default [
-	// tests
-	{
-		input: 'test/src/index.js',
-		output: {
-			file: 'test/public/bundle.js',
-			format: 'iife'
-		},
-		plugins: [
-			resolve(),
-			commonjs(),
-			svelte()
-		]
-	}
-];
+const dev = process.env.ROLLUP_WATCH;
+
+// bundle workers
+export default ['compiler', 'bundler'].map(x => ({
+	input: `src/workers/${x}/index.js`,
+	output: {
+		file: `workers/${x}.js`,
+		format: 'iife'
+	},
+	plugins: [
+		resolve(),
+		json(),
+		!dev && terser()
+	]
+}));

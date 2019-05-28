@@ -68,8 +68,4 @@ export default class ReplProxy {
 	handle_links() {
 		return this.iframe_command('catch_clicks', {});
 	}
-
-	fetch_imports(imports, import_map) {
-		return this.iframe_command('fetch_imports', { imports, import_map })
-	}
 }

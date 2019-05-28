@@ -1,0 +1,274 @@
+import * as rollup from 'rollup/dist/rollup.browser.es.js';
+import commonjs from './plugins/commonjs.js';
+import glsl from './plugins/glsl.js';
+import json from './plugins/json.js';
+
+self.window = self; // egregious hack to get magic-string to work in a worker
+
+let svelteUrl;
+let current_id;
+
+self.addEventListener('message', async event => {
+	switch (event.data.type) {
+		case 'init':
+			svelteUrl = event.data.svelteUrl;
+			importScripts(`${svelteUrl}/compiler.js`);
+
+			break;
+
+		case 'bundle':
+			const { uid, components } = event.data;
+
+			if (components.length === 0) return;
+
+			current_id = uid;
+
+			const result = await bundle({ uid, components });
+
+			if (result.error === ABORT) return;
+			if (result && uid === current_id) postMessage(result);
+
+			break;
+	}
+});
+
+const common_options = {
+	dev: true,
+};
+
+let cached = {
+	dom: {},
+	ssr: {}
+};
+
+const ABORT = { aborted: true };
+
+const fetch_cache = new Map();
+function fetch_if_uncached(url) {
+	if (fetch_cache.has(url)) {
+		return fetch_cache.get(url);
+	}
+
+	const promise = fetch(url)
+		.then(async r => {
+			if (r.ok) {
+				return {
+					url: r.url,
+					body: await r.text()
+				};
+			}
+
+			throw new Error(await r.text());
+		})
+		.catch(err => {
+			fetch_cache.delete(url);
+			throw err;
+		});
+
+	fetch_cache.set(url, promise);
+	return promise;
+}
+
+async function follow_redirects(url) {
+	const res = await fetch_if_uncached(url);
+	return res.url;
+}
+
+async function get_bundle(uid, mode, cache, lookup) {
+	let bundle;
+
+	const warnings = [];
+	const all_warnings = [];
+
+	const new_cache = {};
+
+	const repl_plugin = {
+		async resolveId(importee, importer) {
+			if (uid !== current_id) throw ABORT;
+
+			// importing from Svelte
+			if (importee === `svelte`) return `${svelteUrl}/index.mjs`;
+			if (importee.startsWith(`svelte/`)) return `${svelteUrl}/${importee.slice(7)}.mjs`;
+
+			// temporary workaround for lack of package.json files in sub-packages
+			// https://github.com/sveltejs/svelte/pull/2887
+			if (importer && importer.startsWith(svelteUrl)) {
+				const resolved = new URL(importee, importer).href;
+				return resolved.endsWith('.mjs') ? resolved : `${resolved}.mjs`;
+			}
+
+			// importing from another file in REPL
+			if (importee in lookup) return importee;
+
+			// importing from a URL
+			if (importee.startsWith('http:') || importee.startsWith('https:')) return importee;
+
+			// importing from (probably) unpkg
+			if (importee.startsWith('.')) {
+				const url = new URL(importee, importer).href;
+				self.postMessage({ type: 'status', message: `resolving ${url}` });
+
+				return await follow_redirects(url);
+			}
+
+			else {
+				// fetch from unpkg
+				self.postMessage({ type: 'status', message: `resolving ${importee}` });
+
+				try {
+					const pkg_url = await follow_redirects(`https://unpkg.com/${importee}/package.json`);
+					const pkg_json = (await fetch_if_uncached(pkg_url)).body;
+					const pkg = JSON.parse(pkg_json);
+
+					if (pkg.svelte || pkg.module || pkg.main) {
+						const url = pkg_url.replace(/\/package\.json$/, '');
+						return new URL(pkg.svelte || pkg.module || pkg.main, `${url}/`).href;
+					}
+				} catch (err) {
+					// ignore
+				}
+
+				return await follow_redirects(`https://unpkg.com/${importee}`);
+			}
+		},
+		async load(resolved) {
+			if (uid !== current_id) throw ABORT;
+
+			if (resolved in lookup) return lookup[resolved].source;
+
+			if (!fetch_cache.has(resolved)) {
+				self.postMessage({ type: 'status', message: `fetching ${resolved}` });
+			}
+
+			const res = await fetch_if_uncached(resolved);
+			return res.body;
+		},
+		transform(code, id) {
+			if (uid !== current_id) throw ABORT;
+
+			self.postMessage({ type: 'status', message: `bundling ${id}` });
+
+			if (!/\.svelte$/.test(id)) return null;
+
+			const name = id.split('/').pop().split('.')[0];
+
+			const result = cache[id] && cache[id].code === code
+				? cache[id].result
+				: svelte.compile(code, Object.assign({
+					generate: mode,
+					format: 'esm',
+					name,
+					filename: name + '.svelte'
+				}, common_options));
+
+			new_cache[id] = { code, result };
+
+			(result.warnings || result.stats.warnings).forEach(warning => { // TODO remove stats post-launch
+				warnings.push({
+					message: warning.message,
+					filename: warning.filename,
+					start: warning.start,
+					end: warning.end
+				});
+			});
+
+			return result.js;
+		}
+	};
+
+	try {
+		bundle = await rollup.rollup({
+			input: './App.svelte',
+			plugins: [
+				repl_plugin,
+				commonjs,
+				json,
+				glsl
+			],
+			inlineDynamicImports: true,
+			onwarn(warning) {
+				all_warnings.push({
+					message: warning.message
+				});
+			}
+		});
+
+		return { bundle, cache: new_cache, error: null, warnings, all_warnings };
+	} catch (error) {
+		return { error, bundle: null, cache: new_cache, warnings, all_warnings };
+	}
+}
+
+async function bundle({ uid, components }) {
+	console.clear();
+	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
+
+	const lookup = {};
+	components.forEach(component => {
+		const path = `./${component.name}.${component.type}`;
+		lookup[path] = component;
+	});
+
+	let dom;
+	let error;
+
+	try {
+		dom = await get_bundle(uid, 'dom', cached.dom, lookup);
+		if (dom.error) {
+			throw dom.error;
+		}
+
+		cached.dom = dom.cache;
+
+		const dom_result = (await dom.bundle.generate({
+			format: 'iife',
+			name: 'SvelteComponent',
+			exports: 'named',
+			sourcemap: true
+		})).output[0];
+
+		const ssr = false // TODO how can we do SSR?
+			? await get_bundle(uid, 'ssr', cached.ssr, lookup)
+			: null;
+
+		if (ssr) {
+			cached.ssr = ssr.cache;
+			if (ssr.error) {
+				throw ssr.error;
+			}
+		}
+
+		const ssr_result = ssr
+			? (await ssr.bundle.generate({
+				format: 'iife',
+				name: 'SvelteComponent',
+				exports: 'named',
+				sourcemap: true
+			})).output[0]
+			: null;
+
+		return {
+			uid,
+			dom: dom_result,
+			ssr: ssr_result,
+			warnings: dom.warnings,
+			error: null
+		};
+	} catch (err) {
+		console.error(err);
+
+		const e = error || err;
+		delete e.toString;
+
+		return {
+			uid,
+			dom: null,
+			ssr: null,
+			warnings: dom.warnings,
+			error: Object.assign({}, e, {
+				message: e.message,
+				stack: e.stack
+			})
+		};
+	}
+}
