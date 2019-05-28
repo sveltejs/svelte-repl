@@ -8,7 +8,7 @@ self.window = self; // egregious hack to get magic-string to work in a worker
 let svelteUrl;
 let current_id;
 
-self.addEventListener('message', async event => {
+self.addEventListener('message', event => {
 	switch (event.data.type) {
 		case 'init':
 			svelteUrl = event.data.svelteUrl;
@@ -23,10 +23,14 @@ self.addEventListener('message', async event => {
 
 			current_id = uid;
 
-			const result = await bundle({ uid, components });
+			setTimeout(async () => {
+				if (current_id !== uid) return;
 
-			if (result.error === ABORT) return;
-			if (result && uid === current_id) postMessage(result);
+				const result = await bundle({ uid, components });
+
+				if (result.error === ABORT) return;
+				if (result && uid === current_id) postMessage(result);
+			});
 
 			break;
 	}
