@@ -1,5 +1,6 @@
 <script>
 	import { getContext } from 'svelte';
+	import { slide } from 'svelte/transition';
 
 	const { navigate } = getContext('REPL');
 
@@ -71,7 +72,7 @@
 	}
 </style>
 
-<div class="message {kind}">
+<div in:slide={{delay: 150, duration: 100}} out:slide={{duration: 100}} class="message {kind}">
 	{#if details}
 		<p
 			class:navigable={details.filename}
