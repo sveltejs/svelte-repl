@@ -3,14 +3,16 @@ const workers = new Map();
 let uid = 1;
 
 export default class Bundler {
-	constructor({ workersUrl, svelteUrl, onstatus }) {
-		if (!workers.has(svelteUrl)) {
+	constructor({ workersUrl, packagesUrl, svelteUrl, onstatus }) {
+		const hash = `${packagesUrl}:${svelteUrl}`;
+
+		if (!workers.has(hash)) {
 			const worker = new Worker(`${workersUrl}/bundler.js`);
-			worker.postMessage({ type: 'init', svelteUrl });
-			workers.set(svelteUrl, worker);
+			worker.postMessage({ type: 'init', packagesUrl, svelteUrl });
+			workers.set(hash, worker);
 		}
 
-		this.worker = workers.get(svelteUrl);
+		this.worker = workers.get(hash);
 
 		this.handlers = new Map();
 

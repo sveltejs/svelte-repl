@@ -5,12 +5,14 @@ import json from './plugins/json.js';
 
 self.window = self; // egregious hack to get magic-string to work in a worker
 
+let packagesUrl;
 let svelteUrl;
 let current_id;
 
 self.addEventListener('message', event => {
 	switch (event.data.type) {
 		case 'init':
+			packagesUrl = event.data.packagesUrl;
 			svelteUrl = event.data.svelteUrl;
 			importScripts(`${svelteUrl}/compiler.js`);
 
@@ -126,7 +128,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 				}
 
 				try {
-					const pkg_url = await follow_redirects(`https://unpkg.com/${importee}/package.json`);
+					const pkg_url = await follow_redirects(`${packagesUrl}/${importee}/package.json`);
 					const pkg_json = (await fetch_if_uncached(pkg_url)).body;
 					const pkg = JSON.parse(pkg_json);
 
@@ -138,7 +140,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 					// ignore
 				}
 
-				return await follow_redirects(`https://unpkg.com/${importee}`);
+				return await follow_redirects(`${packagesUrl}/${importee}`);
 			}
 		},
 		async load(resolved) {

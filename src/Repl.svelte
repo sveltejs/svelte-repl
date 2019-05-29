@@ -10,8 +10,8 @@
 	import { is_browser } from './env.js';
 
 	export let workersUrl;
-	export let svelteUrl = 'https://unpkg.com/svelte';
-	export let rollupUrl = 'https://unpkg.com/rollup/dist/rollup.browser.js';
+	export let packagesUrl = 'https://unpkg.com';
+	export let svelteUrl = `${packagesUrl}/svelte`;
 	export let embedded = false;
 	export let orientation = 'columns';
 	export let relaxed = false;
@@ -174,6 +174,7 @@
 
 	const bundler = is_browser && new Bundler({
 		workersUrl,
+		packagesUrl,
 		svelteUrl,
 		onstatus: message => {
 			status = message;
