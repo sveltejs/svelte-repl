@@ -95,7 +95,15 @@ async function get_bundle(uid, mode, cache, lookup) {
 
 			// importing from Svelte
 			if (importee === `svelte`) return `${svelteUrl}/index.mjs`;
-			if (importee.startsWith(`svelte/`)) return `${svelteUrl}/${importee.slice(7)}.mjs`;
+			if (importee.startsWith(`svelte/`)) {
+				const m = svelteUrl.match(/@3\.(\d+)\.(\d+)$/);
+				if (m) {
+					if (+m[1] < 4 || +m[1] === 4 && +m[2] <= 4) {
+						return `${svelteUrl}/${importee.slice(7)}.mjs`;
+					}
+				}
+				return `${svelteUrl}/${importee.slice(7)}/index.mjs`;
+			}
 
 			// temporary workaround for lack of package.json files in sub-packages
 			// https://github.com/sveltejs/svelte/pull/2887
