@@ -97,7 +97,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 			if (importee === `svelte`) return `${svelteUrl}/index.mjs`;
 			if (importee.startsWith(`svelte/`)) {
 				const [, major, minor, patch] = svelte.VERSION.match(/^(\d+)\.(\d+)\.(\d+)/);
-				return (major - 3) || (minor - 4) || (patch - 4) <= 0 ?
+				return ((major - 3) || (minor - 4) || (patch - 4)) <= 0 ?
 					`${svelteUrl}/${importee.slice(7)}.mjs` :
 					`${svelteUrl}/${importee.slice(7)}/index.mjs`;
 			}
