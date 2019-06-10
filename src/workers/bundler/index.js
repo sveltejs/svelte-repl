@@ -80,6 +80,11 @@ async function follow_redirects(url) {
 	return res.url;
 }
 
+function is_legacy_package_structure() {
+	const [, major, minor, patch] = svelte.VERSION.match(/^(\d+)\.(\d+)\.(\d+)/);
+	return ((major - 3) || (minor - 4) || (patch - 4)) <= 0;
+}
+
 async function get_bundle(uid, mode, cache, lookup) {
 	let bundle;
 
@@ -96,17 +101,18 @@ async function get_bundle(uid, mode, cache, lookup) {
 			// importing from Svelte
 			if (importee === `svelte`) return `${svelteUrl}/index.mjs`;
 			if (importee.startsWith(`svelte/`)) {
-				const [, major, minor, patch] = svelte.VERSION.match(/^(\d+)\.(\d+)\.(\d+)/);
-				return ((major - 3) || (minor - 4) || (patch - 4)) <= 0 ?
+				return is_legacy_package_structure() ?
 					`${svelteUrl}/${importee.slice(7)}.mjs` :
 					`${svelteUrl}/${importee.slice(7)}/index.mjs`;
 			}
 
-			// temporary workaround for lack of package.json files in sub-packages
-			// https://github.com/sveltejs/svelte/pull/2887
+			// importing one Svelte runtime module from another
 			if (importer && importer.startsWith(svelteUrl)) {
 				const resolved = new URL(importee, importer).href;
-				return resolved.endsWith('.mjs') ? resolved : `${resolved}.mjs`;
+				if (resolved.endsWith('.mjs')) return resolved;
+				return is_legacy_package_structure() ?
+					`${resolved}.mjs` :
+					`${resolved}/index.mjs`;
 			}
 
 			// importing from another file in REPL
