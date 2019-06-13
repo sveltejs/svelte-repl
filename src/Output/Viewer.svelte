@@ -137,7 +137,7 @@
 		title="Result"
 		class:inited
 		bind:this={iframe}
-		sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals {relaxed ? 'allow-scripts allow-same-origin' : ''}"
+		sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals {relaxed ? 'allow-same-origin' : ''}"
 		class="{error || pending || pending_imports ? 'greyed-out' : ''}"
 		{srcdoc}
 	></iframe>
