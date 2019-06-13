@@ -124,14 +124,14 @@ async function get_bundle(uid, mode, cache, lookup) {
 			// importing from (probably) unpkg
 			if (importee.startsWith('.')) {
 				const url = new URL(importee, importer).href;
-				self.postMessage({ type: 'status', message: `resolving ${url}` });
+				self.postMessage({ type: 'status', uid, message: `resolving ${url}` });
 
 				return await follow_redirects(url);
 			}
 
 			else {
 				// fetch from unpkg
-				self.postMessage({ type: 'status', message: `resolving ${importee}` });
+				self.postMessage({ type: 'status', uid, message: `resolving ${importee}` });
 
 				if (importer in lookup) {
 					const match = /^(@[^/]+\/)?[^/]+/.exec(importee);
@@ -160,7 +160,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 			if (resolved in lookup) return lookup[resolved].source;
 
 			if (!fetch_cache.has(resolved)) {
-				self.postMessage({ type: 'status', message: `fetching ${resolved}` });
+				self.postMessage({ type: 'status', uid, message: `fetching ${resolved}` });
 			}
 
 			const res = await fetch_if_uncached(resolved);
@@ -169,7 +169,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 		transform(code, id) {
 			if (uid !== current_id) throw ABORT;
 
-			self.postMessage({ type: 'status', message: `bundling ${id}` });
+			self.postMessage({ type: 'status', uid, message: `bundling ${id}` });
 
 			if (!/\.svelte$/.test(id)) return null;
 

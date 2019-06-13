@@ -17,14 +17,14 @@ export default class Bundler {
 		this.handlers = new Map();
 
 		this.worker.addEventListener('message', event => {
-			if (event.data.type === 'status') {
-				onstatus(event.data.message);
-				return;
-			}
-
 			const handler = this.handlers.get(event.data.uid);
 
 			if (handler) { // if no handler, was meant for a different REPL
+				if (event.data.type === 'status') {
+					onstatus(event.data.message);
+					return;
+				}
+
 				onstatus(null);
 				handler(event.data);
 				this.handlers.delete(event.data.uid);
