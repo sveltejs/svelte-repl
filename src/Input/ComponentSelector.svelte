@@ -24,6 +24,17 @@
 		const match = /(.+)\.(svelte|js)$/.exec($selected.name);
 		$selected.name = match ? match[1] : $selected.name;
 		if (match && match[2]) $selected.type = match[2];
+		
+		// Checking whether new component name same as existing components name
+		$components.forEach((_component, index) => {
+			// skip last component which is current component
+			if (index != $components.length - 1) {
+				if (editing.name == _component.name && editing.type == _component.type) {
+					editing.name = `Component${uid}`;
+				}
+			}
+	    	});
+		
 		editing = null;
 
 		// re-select, in case the type changed
@@ -37,12 +48,12 @@
 		rebundle();
 	}
 
-	function remove(component) {
+	function remove(index) {
+		// Removing component by passing `index` as parameter instead passing  `component` as parameter and using `indexOf` again.
+		const component = $components[index]
 		let result = confirm(`Are you sure you want to delete ${component.name}.${component.type}?`);
 
 		if (result) {
-			const index = $components.indexOf(component);
-
 			if (~index) {
 				components.set($components.slice(0, index).concat($components.slice(index + 1)));
 			} else {
@@ -199,7 +210,7 @@
 <div class="component-selector">
 	{#if $components.length}
 		<div class="file-tabs" on:dblclick="{addNew}">
-			{#each $components as component}
+			{#each $components as component, index}
 				<div
 					id={component.name}
 					class="button"
@@ -208,7 +219,7 @@
 					on:click="{() => selectComponent(component)}"
 					on:dblclick="{e => e.stopPropagation()}"
 				>
-					{#if component.name == 'App'}
+					{#if index == 0}
 						<div class="uneditable">
 							App.svelte
 						</div>
@@ -233,7 +244,7 @@
 								{component.name}.{component.type}
 							</div>
 
-							<span class="remove" on:click="{() => remove(component)}">
+							<span class="remove" on:click="{() => remove(index)}">
 								<svg width="12" height="12" viewBox="0 0 24 24">
 									<line stroke="#999" x1='18' y1='6' x2='6' y2='18' />
 									<line stroke="#999" x1='6' y1='6' x2='18' y2='18' />
