@@ -216,6 +216,7 @@
 						{#if component === editing}
 							<span class="input-sizer">{editing.name + (/\./.test(editing.name) ? '' : `.${editing.type}`)}</span>
 
+							<!-- svelte-ignore a11y-autofocus -->
 							<input
 								autofocus
 								spellcheck={false}
