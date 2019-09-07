@@ -14,13 +14,13 @@
     "lint": "eslint src/**.svelte src/**.js"
   },
   "devDependencies": {
-    "eslint": "^5.12.1",
-    "eslint-plugin-svelte3": "^0.4.4",
-    "rollup": "^1.12.4",
+    "eslint": "^6.3.0",
+    "eslint-plugin-svelte3": "^2.7.3",
+    "rollup": "^1.20.3",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.0.0",
-    "rollup-plugin-terser": "^5.0.0",
-    "svelte": "^3.0.0-beta.28"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.1",
+    "svelte": "^3.9.2"
   },
   "repository": "https://github.com/sveltejs/svelte-repl",
   "author": "Rich Harris",
@@ -33,9 +33,9 @@
     "workers"
   ],
   "dependencies": {
-    "codemirror": "^5.45.0",
-    "estree-walker": "^0.6.0",
-    "sourcemap-codec": "^1.4.4",
-    "yootils": "0.0.15"
+    "codemirror": "^5.48.4",
+    "estree-walker": "^0.6.1",
+    "sourcemap-codec": "^1.4.6",
+    "yootils": "0.0.16"
   }
 }
