@@ -103,7 +103,6 @@
 	let fulfil_output_ready;
 	let output_ready = new Promise(f => fulfil_output_ready = f);
 
-
 	setContext('REPL', {
 		components,
 		selected,
@@ -167,6 +166,12 @@
 		output.set($selected, $compile_options);
 	}
 
+	let dark_mode = false;
+
+	function handle_toggle_dark_mode() {
+		input.toggleDarkMode();
+	}
+
 	let input;
 	let sourceErrorLoc;
 	let runtimeErrorLoc; // TODO refactor this stuff — runtimeErrorLoc is unused
@@ -222,8 +227,12 @@
 		{fixed}
 	>
 		<section slot=a>
-			<ComponentSelector {handle_select}/>
-			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}"/>
+			<ComponentSelector {handle_select}
+			{handle_toggle_dark_mode}
+			bind:dark_mode />
+			<ModuleEditor bind:this={input}
+			errorLoc="{sourceErrorLoc || runtimeErrorLoc}"
+			bind:dark_mode/>
 		</section>
 
 		<section slot=b style='height: 100%;'>
