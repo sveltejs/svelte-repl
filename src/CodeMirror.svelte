@@ -19,17 +19,21 @@
 
 	const dispatch = createEventDispatcher();
 	const { navigate } = getContext('REPL');
+	const DEFAULT_DARK_THEME = 'midnight';
+	const DEFAULT_LIGHT_THEME = 'default';
 
 	export let readonly = false;
 	export let errorLoc = null;
 	export let flex = false;
 	export let lineNumbers = true;
 	export let tab = true;
+	export let dark_mode;
 
 	let w;
 	let h;
 	let code = '';
 	let mode;
+	let themeName = 'default';
 
 	// We have to expose set and update methods, rather
 	// than making this state-driven through props,
@@ -62,6 +66,12 @@
 
 	export function focus() {
 		editor.focus();
+	}
+
+	export function toggleDarkMode() {
+		dark_mode = !dark_mode
+		themeName = dark_mode ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
+		editor.setOption('theme', themeName);
 	}
 
 	const modes = {
@@ -205,7 +215,6 @@
 
 	.codemirror-container :global(.CodeMirror) {
 		height: 100%;
-		background: transparent;
 		font: 400 14px/1.7 var(--font-mono);
 		color: var(--base);
 	}
@@ -261,7 +270,7 @@
 	}
 </style>
 
-<div class='codemirror-container' class:flex bind:offsetWidth={w} bind:offsetHeight={h}>
+<div class='codemirror-container cm-s-{themeName}' class:flex bind:offsetWidth={w} bind:offsetHeight={h}>
 	<!-- svelte-ignore a11y-positive-tabindex -->
 	<textarea
 		tabindex='2'

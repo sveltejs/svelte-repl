@@ -6,6 +6,7 @@
 	const { bundle, selected, handle_change, navigate, register_module_editor } = getContext('REPL');
 
 	export let errorLoc;
+	export let dark_mode;
 
 	let editor;
 	onMount(() => {
@@ -14,6 +15,10 @@
 
 	export function focus() {
 		editor.focus();
+	}
+
+	export function toggleDarkMode() {
+		editor.toggleDarkMode();
 	}
 </script>
 
@@ -43,6 +48,7 @@
 		<CodeMirror
 			bind:this={editor}
 			{errorLoc}
+			bind:dark_mode
 			on:change={handle_change}
 		/>
 	</div>
