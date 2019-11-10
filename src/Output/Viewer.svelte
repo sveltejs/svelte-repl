@@ -42,6 +42,22 @@
 			ready = true;
 		});
 
+		window.addEventListener('message', (event) => {
+			if (event.data && (event.data.type === 'error' || event.data.type === 'unhandledrejection')) {
+				const data = event.data.value;
+				if (event.data.type === 'unhandledrejection') {
+					data.message = 'Uncaught (in promise): ' + data.message;
+				}
+				const loc = getLocationFromStack(data.stack, $bundle.dom.map);
+				if (loc) {
+					data.filename = loc.source;
+					data.loc = { line: loc.line, column: loc.column };
+				}
+
+				error = data;
+			}
+		}, false);
+
 		return () => {
 			proxy.destroy();
 		}
@@ -77,6 +93,14 @@
 
 				window.component = new SvelteComponent.default({
 					target: document.body
+				});
+
+				window.onerror = function (msg, url, lineNo, columnNo, error) {
+					window.parent.postMessage({ type: 'error', value: error }, '*');
+				}
+
+				window.addEventListener("unhandledrejection", event => {
+					window.parent.postMessage({ type: 'unhandledrejection', value: event.reason }, '*');
 				});
 			`);
 
