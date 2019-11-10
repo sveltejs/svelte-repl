@@ -66,10 +66,6 @@
 		margin: 0;
 	}
 
-	.info {
-		background-color: var(--second);
-	}
-
 	.error {
 		background-color: #da106e;
 	}

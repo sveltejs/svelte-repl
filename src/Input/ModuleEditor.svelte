@@ -30,6 +30,12 @@
 		flex: 1 1 auto;
 	}
 
+	.info {
+		background-color: var(--second);
+		max-height: 50%;
+		overflow: scroll;
+	}
+
 	:global(.columns) .editor-wrapper {
 		/* make it easier to interact with scrollbar */
 		padding-right: 8px;
