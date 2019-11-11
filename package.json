@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "rollup -cw",
     "build": "rollup -c",
-    "srcdoc:update": "curl https://raw.githubusercontent.com/sveltejs/template/v3/public/global.css > src/Output/srcdoc/styles.css",
+    "srcdoc:update": "curl https://raw.githubusercontent.com/sveltejs/template/master/public/global.css > src/Output/srcdoc/styles.css",
     "srcdoc": "npm run srcdoc:update && node scripts/build-srcdoc.js",
     "prepublishOnly": "npm run srcdoc && npm run build && npm test",
     "test": "echo \"no tests yet\"",
