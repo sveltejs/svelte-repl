@@ -33,7 +33,7 @@
 	.info {
 		background-color: var(--second);
 		max-height: 50%;
-		overflow: scroll;
+		overflow: auto;
 	}
 
 	:global(.columns) .editor-wrapper {
