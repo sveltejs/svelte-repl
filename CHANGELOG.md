@@ -1,5 +1,10 @@
 # svelte-repl changelog
 
+## 0.1.12
+
+* Make the list of warnings scroll when there are a large number ([#29](https://github.com/sveltejs/svelte-repl/issues/29))
+* Bail out of long loops in components ([#40](https://github.com/sveltejs/svelte-repl/issues/40))
+
 ## 0.1.11
 
 * Fix srcdoc
