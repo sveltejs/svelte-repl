@@ -1,5 +1,9 @@
 # svelte-repl changelog
 
+## 0.1.13
+
+* Fix style issue with list of warnings ([#59](https://github.com/sveltejs/svelte-repl/pull/59))
+
 ## 0.1.12
 
 * Make the list of warnings scroll when there are a large number ([#29](https://github.com/sveltejs/svelte-repl/issues/29))
