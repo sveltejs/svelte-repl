@@ -38,10 +38,6 @@ self.addEventListener('message', event => {
 	}
 });
 
-const common_options = {
-	dev: true,
-};
-
 let cached = {
 	dom: {},
 	ssr: {}
@@ -80,9 +76,17 @@ async function follow_redirects(url) {
 	return res.url;
 }
 
+function compare_to_version(major, minor, patch) {
+	const v = svelte.VERSION.match(/^(\d+)\.(\d+)\.(\d+)/);
+	return (v[1] - major) || (v[2] - minor) || (v[3] - patch);
+}
+
 function is_legacy_package_structure() {
-	const [, major, minor, patch] = svelte.VERSION.match(/^(\d+)\.(\d+)\.(\d+)/);
-	return ((major - 3) || (minor - 4) || (patch - 4)) <= 0;
+	return compare_to_version(3, 4, 4) <= 0;
+}
+
+function has_loopGuardTimeout_feature() {
+	return compare_to_version(3, 14, 0) >= 0;
 }
 
 async function get_bundle(uid, mode, cache, lookup) {
@@ -180,9 +184,12 @@ async function get_bundle(uid, mode, cache, lookup) {
 				: svelte.compile(code, Object.assign({
 					generate: mode,
 					format: 'esm',
+					dev: true,
 					name,
 					filename: name + '.svelte'
-				}, common_options));
+				}, has_loopGuardTimeout_feature() && {
+					loopGuardTimeout: 100
+				}));
 
 			new_cache[id] = { code, result };
 
