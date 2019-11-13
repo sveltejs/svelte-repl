@@ -5,7 +5,7 @@
 	let _CodeMirror;
 
 	if (is_browser) {
-		codemirror_promise = import(/* webpackChunkName: "codemirror" */ './codemirror.js');
+		codemirror_promise = import('./codemirror.js');
 
 		codemirror_promise.then(mod => {
 			_CodeMirror = mod.default;
@@ -14,11 +14,10 @@
 </script>
 
 <script>
-	import { onMount, beforeUpdate, createEventDispatcher, getContext } from 'svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
 	import Message from './Message.svelte';
 
 	const dispatch = createEventDispatcher();
-	const { navigate } = getContext('REPL');
 
 	export let readonly = false;
 	export let errorLoc = null;

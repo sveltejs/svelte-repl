@@ -1,8 +1,7 @@
 <script>
-	import { onMount, setContext, createEventDispatcher } from 'svelte';
+	import { setContext, createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
 	import SplitPane from './SplitPane.svelte';
-	import CodeMirror from './CodeMirror.svelte';
 	import ComponentSelector from './Input/ComponentSelector.svelte';
 	import ModuleEditor from './Input/ModuleEditor.svelte';
 	import Output from './Output/index.svelte';
@@ -21,12 +20,6 @@
 	export let injectedCSS = '';
 
 	export function toJSON() {
-		// TODO there's a bug here — Svelte hoists this function because
-		// it wrongly things that $components is global. Needs to
-		// factor in $ variables when determining hoistability
-
-		svelteUrl; // workaround
-
 		return {
 			imports: $bundle.imports,
 			components: $components
