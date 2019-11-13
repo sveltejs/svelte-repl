@@ -1,13 +1,11 @@
 <script>
-	import { onMount, createEventDispatcher, getContext } from 'svelte';
+	import { onMount, getContext } from 'svelte';
 	import getLocationFromStack from './getLocationFromStack.js';
 	import ReplProxy from './ReplProxy.js';
 	import Message from '../Message.svelte';
 	import srcdoc from './srcdoc/index.js';
-	import { decode } from 'sourcemap-codec';
 
-	const dispatch = createEventDispatcher();
-	const { bundle, navigate } = getContext('REPL');
+	const { bundle } = getContext('REPL');
 
 	export let error; // TODO should this be exposed as a prop?
 

@@ -3,7 +3,7 @@
 	import CodeMirror from '../CodeMirror.svelte';
 	import Message from '../Message.svelte';
 
-	const { bundle, selected, handle_change, navigate, register_module_editor } = getContext('REPL');
+	const { bundle, selected, handle_change, register_module_editor } = getContext('REPL');
 
 	export let errorLoc;
 
