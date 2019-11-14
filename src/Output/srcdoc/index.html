@@ -59,6 +59,14 @@
 				}
 
 				window.addEventListener('message', handle_message, false);
+
+				window.onerror = function (msg, url, lineNo, columnNo, error) {
+					parent.postMessage({ action: 'error', value: error }, '*');
+				}
+
+				window.addEventListener("unhandledrejection", event => {
+					parent.postMessage({ action: 'unhandledrejection', value: event.reason }, '*');
+				});
 			}).call(this);
 		</script>
 	</head>
