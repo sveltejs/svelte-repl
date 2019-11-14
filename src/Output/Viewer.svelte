@@ -2,12 +2,14 @@
 	import { onMount, getContext } from 'svelte';
 	import getLocationFromStack from './getLocationFromStack.js';
 	import ReplProxy from './ReplProxy.js';
+	import Console from './Console.svelte';
 	import Message from '../Message.svelte';
 	import srcdoc from './srcdoc/index.js';
 
 	const { bundle } = getContext('REPL');
 
 	export let error; // TODO should this be exposed as a prop?
+	let logs = [];
 
 	export function setProp(prop, value) {
 		if (!proxy) return;
@@ -41,6 +43,9 @@
 				if (typeof error === 'string') error = { message: error };
 				error.message = 'Uncaught (in promise): ' + error.message;
 				show_error(error);
+			},
+			on_console: event => {
+				logs = [...logs, event];
 			}
 		});
 
@@ -89,6 +94,7 @@
 			`);
 
 			error = null;
+			logs = [];
 		} catch (e) {
 			show_error(e);
 		}
@@ -161,4 +167,5 @@
 			<Message kind="info" truncate>{status || 'loading Svelte compiler...'}</Message>
 		{/if}
 	</div>
+	<Console {logs} />
 </div>

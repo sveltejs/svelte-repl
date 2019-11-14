@@ -62,6 +62,8 @@ export default class ReplProxy {
 				return this.handlers.on_error(event.data);
 			case 'unhandledrejection':
 				return this.handlers.on_unhandled_rejection(event.data);
+			case 'console':
+				return this.handlers.on_console(event.data);
 		}
 	}
 

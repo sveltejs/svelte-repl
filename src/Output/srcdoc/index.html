@@ -68,6 +68,14 @@
 					parent.postMessage({ action: 'unhandledrejection', value: event.reason }, '*');
 				});
 			}).call(this);
+
+			['log', 'warn', 'error'].forEach((level) => {
+				const original = console[level];
+				console[level] = (...args) => {
+					parent.postMessage({ action: 'console', level, args }, '*');
+					original(...args);
+				}
+			})
 		</script>
 	</head>
 	<body></body>
