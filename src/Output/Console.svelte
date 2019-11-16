@@ -23,6 +23,7 @@
 
 	.log > :global(*) {
 		margin-right: 10px;
+		font-family: var(--font-mono);
 	}
 
 	.console-warn {
