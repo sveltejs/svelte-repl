@@ -2,6 +2,7 @@
 	import { onMount, getContext } from 'svelte';
 	import getLocationFromStack from './getLocationFromStack.js';
 	import SplitPane from '../SplitPane.svelte';
+	import PaneWithPanel from './PaneWithPanel.svelte';
 	import ReplProxy from './ReplProxy.js';
 	import Console from './Console.svelte';
 	import Message from '../Message.svelte';
@@ -165,6 +166,17 @@
 		opacity: .25;
 	}
 
+	button {
+		color: #999;
+		font-size: 12px;
+		text-transform: uppercase;
+		display: block;
+	}
+
+	button:hover {
+		color: #333;
+	}
+
 	.overlay {
 		position: absolute;
 		bottom: 0;
@@ -173,8 +185,8 @@
 </style>
 
 <div class="iframe-container">
-	<SplitPane type="vertical" bind:pos={log_height}>
-		<div slot="a">
+	<PaneWithPanel pos={60} panel="Console">
+		<div slot="main">
 			<iframe
 				title="Result"
 				class:inited
@@ -185,10 +197,18 @@
 			></iframe>
 		</div>
 
-		<section slot="b">
-			<Console {logs} on:toggle={on_toggle_console} on:clear={clear_logs}/>
+		<div slot="panel-header">
+			<button on:click|stopPropagation={clear_logs}>
+				{#if (logs.length > 0)}({logs.length}){/if}
+				Clear
+			</button>
+		</div>
+
+		<section slot="panel-body">
+			<Console {logs} on:clear={clear_logs}/>
 		</section>
-	</SplitPane>
+	</PaneWithPanel>
+
 	<div class="overlay">
 		{#if error}
 			<Message kind="error" details={error}/>

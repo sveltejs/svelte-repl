@@ -7,27 +7,30 @@
 	export let type;
 	export let pos = 50;
 	export let fixed = false;
-	export let min = 50;
-	// export let min1 = min;
-	// export let min2 = min;
+	export let buffer = 40;
+	export let min;
+	export let max;
+
+	let w;
+	let h;
+	$: size = type === 'vertical' ? h : w;
+
+	$: min = 100 * (buffer / size);
+	$: max = 100 - min;
+	$: pos = yootils.clamp(pos, min, max);
 
 	const refs = {};
 
 	let dragging = false;
 
 	function setPos(event) {
-		const { top, bottom, left, right } = refs.container.getBoundingClientRect();
+		const { top, left } = refs.container.getBoundingClientRect();
 
-		const extents = type === 'vertical' ? [top, bottom] : [left, right];
+		const px = type === 'vertical'
+			? (event.clientY - top)
+			: (event.clientX - left);
 
-		const px = yootils.clamp(
-			type === 'vertical' ? event.clientY : event.clientX,
-			extents[0] + min,
-			extents[1] - min
-		);
-
-		pos = 100 * (px - extents[0]) / (extents[1] - extents[0]);
-
+		pos = 100 * px / size;
 		dispatch('change');
 	}
 
@@ -75,6 +78,7 @@
 		float: left;
 		width: 100%;
 		height: 100%;
+		overflow: auto;
 	}
 
 	.mousecatcher {
@@ -145,7 +149,7 @@
 	.bottom { bottom: 0; }
 </style>
 
-<div class="container" bind:this={refs.container}>
+<div class="container" bind:this={refs.container} bind:clientWidth={w} bind:clientHeight={h}>
 	<div class="pane" style="{dimension}: {pos}%;">
 		<slot name="a"></slot>
 	</div>
