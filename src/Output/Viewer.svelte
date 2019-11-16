@@ -1,6 +1,7 @@
 <script>
 	import { onMount, getContext } from 'svelte';
 	import getLocationFromStack from './getLocationFromStack.js';
+	import SplitPane from '../SplitPane.svelte';
 	import ReplProxy from './ReplProxy.js';
 	import Console from './Console.svelte';
 	import Message from '../Message.svelte';
@@ -30,22 +31,25 @@
 	let ready = false;
 	let inited = false;
 
+	let log_height = 90;
+	let prev_height;
+
 	onMount(() => {
 		proxy = new ReplProxy(iframe, {
 			on_fetch_progress: progress => {
 				pending_imports = progress;
 			},
 			on_error: event => {
-				show_error(event.value);
+				push_logs({ level: 'error', args: [event.value]});
 			},
 			on_unhandled_rejection: event => {
 				let error = event.value;
 				if (typeof error === 'string') error = { message: error };
 				error.message = 'Uncaught (in promise): ' + error.message;
-				show_error(error);
+				push_logs({ level: 'error', args: [error]});
 			},
 			on_console: event => {
-				logs = [...logs, event];
+				push_logs(event);
 			}
 		});
 
@@ -64,6 +68,8 @@
 		if (!$bundle || $bundle.error) return;
 
 		try {
+			push_logs({ level: 'announcement', message: 'Svelte application rebuilt!' });
+
 			await proxy.eval(`
 				${injectedJS}
 
@@ -94,7 +100,6 @@
 			`);
 
 			error = null;
-			logs = [];
 		} catch (e) {
 			show_error(e);
 		}
@@ -118,6 +123,23 @@
 		}
 
 		error = e;
+	}
+
+	function push_logs(log) {
+		logs = [...logs, log];
+	}
+
+	function on_toggle_console() {
+		if (log_height < 90) {
+			prev_height = log_height;
+			log_height = 90;
+		} else {
+			log_height = prev_height || 45;
+		}
+	}
+
+	function clear_logs() {
+		logs = [{ level: 'announcement', message: 'Console was cleared' }];
 	}
 </script>
 
@@ -151,15 +173,22 @@
 </style>
 
 <div class="iframe-container">
-	<iframe
-		title="Result"
-		class:inited
-		bind:this={iframe}
-		sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals {relaxed ? 'allow-same-origin' : ''}"
-		class="{error || pending || pending_imports ? 'greyed-out' : ''}"
-		{srcdoc}
-	></iframe>
+	<SplitPane type="vertical" bind:pos={log_height}>
+		<div slot="a">
+			<iframe
+				title="Result"
+				class:inited
+				bind:this={iframe}
+				sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals {relaxed ? 'allow-same-origin' : ''}"
+				class="{error || pending || pending_imports ? 'greyed-out' : ''}"
+				{srcdoc}
+			></iframe>
+		</div>
 
+		<section slot="b">
+			<Console {logs} on:toggle={on_toggle_console} on:clear={clear_logs}/>
+		</section>
+	</SplitPane>
 	<div class="overlay">
 		{#if error}
 			<Message kind="error" details={error}/>
@@ -167,5 +196,4 @@
 			<Message kind="info" truncate>{status || 'loading Svelte compiler...'}</Message>
 		{/if}
 	</div>
-	<Console {logs} />
 </div>
