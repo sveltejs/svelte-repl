@@ -50,7 +50,11 @@
 				push_logs({ level: 'error', args: [error]});
 			},
 			on_console: event => {
-				push_logs(event);
+				if (event.level === 'clear') {
+					logs = [{ level: 'clear' }];
+				} else {
+					push_logs(event);
+				}
 			}
 		});
 

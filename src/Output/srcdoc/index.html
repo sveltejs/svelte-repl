@@ -69,10 +69,16 @@
 				});
 			}).call(this);
 
-			['log', 'warn', 'error'].forEach((level) => {
+			// TODO handle group/groupEnd, table, trace, etc
+			['clear', 'log', 'info', 'dir', 'warn', 'error'].forEach((level) => {
 				const original = console[level];
 				console[level] = (...args) => {
-					parent.postMessage({ action: 'console', level, args }, '*');
+					try {
+						parent.postMessage({ action: 'console', level, args }, '*');
+					} catch (err) {
+						parent.postMessage({ action: 'console', level: 'unclonable' }, '*');
+					}
+
 					original(...args);
 				}
 			})

@@ -7,9 +7,15 @@
 <div class="container">
 	{#each logs as log}
 		<div class="log console-{log.level}">
-			{#each log.args as arg}
-				<JSONNode value={arg} />
-			{/each}
+			{#if log.level === 'clear'}
+				<span class="info">Console was cleared</span>
+			{:else if log.level === 'unclonable'}
+				<span class="info error">Message could not be cloned. Open devtools to see it</span>
+			{:else}
+				{#each log.args as arg}
+					<JSONNode value={arg} />
+				{/each}
+			{/if}
 		</div>
 	{/each}
 </div>
@@ -34,5 +40,15 @@
 	.console-error {
 		background: #fff0f0;
 		border-color: #fed6d7;
+	}
+
+	.info {
+		color: #666;
+		font-family: var(--font) !important;
+		font-size: 12px;
+	}
+
+	.error {
+		color: #da106e; /* todo make this a var */
 	}
 </style>
