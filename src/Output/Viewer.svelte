@@ -68,7 +68,7 @@
 		if (!$bundle || $bundle.error) return;
 
 		try {
-			push_logs({ level: 'announcement', message: 'Svelte application rebuilt!' });
+			clear_logs();
 
 			await proxy.eval(`
 				${injectedJS}
@@ -139,7 +139,7 @@
 	}
 
 	function clear_logs() {
-		logs = [{ level: 'announcement', message: 'Console was cleared' }];
+		logs = [];
 	}
 </script>
 

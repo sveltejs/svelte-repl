@@ -6,8 +6,6 @@
 
   export let logs;
 
-  $: logs_length = logs.filter(log => log.level !== 'announcement').length
-
   function toggleExpand() {
     dispatch('toggle');
   }
@@ -62,12 +60,6 @@
     background: #fff0f0;
     border-color: #fed6d7;
   }
-  .console-announcement {
-    background: #fffbe6;
-    border-color: #fff4c4;
-    color: #735828;
-    font-size: 13px;
-  }
   button {
     float: right;
     color: #999;
@@ -78,22 +70,18 @@
 </style>
 <div class="container">
   <div class="header" on:click={toggleExpand}>
-    Console 
-    {#if logs_length > 0}
-      <span class="pill">{logs_length}</span>
+    Console
+    {#if logs.length > 0}
+      <span class="pill">{logs.length}</span>
     {/if}
     <button on:click={clear}>Clear</button>
   </div>
   <div class="logs">
     {#each logs as log}
       <div class={`log console-${log.level}`}>
-        {#if log.level === 'announcement'}
-          {log.message}
-        {:else}
-          {#each log.args as arg}
-            <JSONNode value={arg} />
-          {/each}
-        {/if}
+        {#each log.args as arg}
+          <JSONNode value={arg} />
+        {/each}
       </div>
     {/each}
   </div>
