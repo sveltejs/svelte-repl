@@ -26,9 +26,9 @@
 </script>
 
 <SplitPane bind:max type="vertical" bind:pos={pos}>
-	<div slot="a">
+	<section slot="a">
 		<slot name="main"></slot>
-	</div>
+	</section>
 
 	<section slot="b">
 		<div class="panel-header" on:click={toggle}>
@@ -44,7 +44,7 @@
 
 <style>
 	.panel-header {
-		height: 40px;
+		height: 42px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -53,7 +53,7 @@
 	}
 
 	.panel-body {
-		max-height: 100% - 40px;
+		max-height: calc(100% - 42px);
 		overflow: auto;
 	}
 
