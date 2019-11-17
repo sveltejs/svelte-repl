@@ -4,7 +4,7 @@
 
 	export let panel;
 	export let pos = 50;
-	let previous_pos = pos;
+	let previous_pos = Math.min(pos, 70);
 
 	let max;
 

@@ -202,7 +202,7 @@
 </style>
 
 <div class="iframe-container">
-	<PaneWithPanel pos={60} panel="Console">
+	<PaneWithPanel pos={100} panel="Console">
 		<div slot="main">
 			<iframe
 				title="Result"
