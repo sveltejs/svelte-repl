@@ -1,5 +1,10 @@
 # svelte-repl changelog
 
+## 0.1.16
+
+* Reinstate background color on info message ([#63](https://github.com/sveltejs/svelte-repl/pull/63))
+* Handle duplicate module names more gracefully ([#60](https://github.com/sveltejs/svelte-repl/pull/60))
+
 ## 0.1.15
 
 * Fix height
