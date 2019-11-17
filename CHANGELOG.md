@@ -1,5 +1,9 @@
 # svelte-repl changelog
 
+## 0.1.14
+
+* Add a console panel to the results tab ([#62](https://github.com/sveltejs/svelte-repl/pull/62))
+
 ## 0.1.13
 
 * Fix style issue with list of warnings ([#59](https://github.com/sveltejs/svelte-repl/pull/59))
