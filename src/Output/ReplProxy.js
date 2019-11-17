@@ -52,12 +52,18 @@ export default class ReplProxy {
 
 		const { action, args } = event.data;
 
-		if (action === 'cmd_error' || action === 'cmd_ok') {
-			this.handle_command_message(event.data);
-		}
-
-		if (action === 'fetch_progress') {
-			this.handlers.on_fetch_progress(args.remaining)
+		switch (action) {
+			case 'cmd_error':
+			case 'cmd_ok':
+				return this.handle_command_message(event.data);
+			case 'fetch_progress':
+				return this.handlers.on_fetch_progress(args.remaining)
+			case 'error':
+				return this.handlers.on_error(event.data);
+			case 'unhandledrejection':
+				return this.handlers.on_unhandled_rejection(event.data);
+			case 'console':
+				return this.handlers.on_console(event.data);
 		}
 	}
 

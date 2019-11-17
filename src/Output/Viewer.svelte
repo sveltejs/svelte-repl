@@ -1,13 +1,17 @@
 <script>
 	import { onMount, getContext } from 'svelte';
 	import getLocationFromStack from './getLocationFromStack.js';
+	import SplitPane from '../SplitPane.svelte';
+	import PaneWithPanel from './PaneWithPanel.svelte';
 	import ReplProxy from './ReplProxy.js';
+	import Console from './Console.svelte';
 	import Message from '../Message.svelte';
 	import srcdoc from './srcdoc/index.js';
 
 	const { bundle } = getContext('REPL');
 
 	export let error; // TODO should this be exposed as a prop?
+	let logs = [];
 
 	export function setProp(prop, value) {
 		if (!proxy) return;
@@ -28,10 +32,42 @@
 	let ready = false;
 	let inited = false;
 
+	let log_height = 90;
+	let prev_height;
+
+	let last_console_event;
+
 	onMount(() => {
 		proxy = new ReplProxy(iframe, {
 			on_fetch_progress: progress => {
 				pending_imports = progress;
+			},
+			on_error: event => {
+				push_logs({ level: 'error', args: [event.value]});
+			},
+			on_unhandled_rejection: event => {
+				let error = event.value;
+				if (typeof error === 'string') error = { message: error };
+				error.message = 'Uncaught (in promise): ' + error.message;
+				push_logs({ level: 'error', args: [error]});
+			},
+			on_console: log => {
+				if (log.level === 'clear') {
+					logs = [log];
+				} else if (log.duplicate) {
+					const last_log = logs[logs.length - 1];
+
+					if (last_log) {
+						last_log.count = (last_log.count || 1) + 1;
+						logs = logs;
+					} else {
+						last_console_event.count = 1;
+						logs = [last_console_event];
+					}
+				} else {
+					push_logs(log);
+					last_console_event = log;
+				}
 			}
 		});
 
@@ -40,21 +76,6 @@
 			ready = true;
 		});
 
-		window.addEventListener('message', (event) => {
-			if (event.data && (event.data.type === 'error' || event.data.type === 'unhandledrejection')) {
-				const data = event.data.value;
-				if (event.data.type === 'unhandledrejection') {
-					data.message = 'Uncaught (in promise): ' + data.message;
-				}
-				const loc = getLocationFromStack(data.stack, $bundle.dom.map);
-				if (loc) {
-					data.filename = loc.source;
-					data.loc = { line: loc.line, column: loc.column };
-				}
-
-				error = data;
-			}
-		}, false);
 
 		return () => {
 			proxy.destroy();
@@ -65,6 +86,8 @@
 		if (!$bundle || $bundle.error) return;
 
 		try {
+			clear_logs();
+
 			await proxy.eval(`
 				${injectedJS}
 
@@ -92,25 +115,11 @@
 				window.component = new SvelteComponent.default({
 					target: document.body
 				});
-
-				window.onerror = function (msg, url, lineNo, columnNo, error) {
-					window.parent.postMessage({ type: 'error', value: error }, '*');
-				}
-
-				window.addEventListener("unhandledrejection", event => {
-					window.parent.postMessage({ type: 'unhandledrejection', value: event.reason }, '*');
-				});
 			`);
 
 			error = null;
 		} catch (e) {
-			const loc = getLocationFromStack(e.stack, $bundle.dom.map);
-			if (loc) {
-				e.filename = loc.source;
-				e.loc = { line: loc.line, column: loc.column };
-			}
-
-			error = e;
+			show_error(e);
 		}
 
 		inited = true;
@@ -123,6 +132,33 @@
 		style.textContent = ${JSON.stringify(injectedCSS)};
 		document.head.appendChild(style);
 	}`;
+
+	function show_error(e) {
+		const loc = getLocationFromStack(e.stack, $bundle.dom.map);
+		if (loc) {
+			e.filename = loc.source;
+			e.loc = { line: loc.line, column: loc.column };
+		}
+
+		error = e;
+	}
+
+	function push_logs(log) {
+		logs = [...logs, log];
+	}
+
+	function on_toggle_console() {
+		if (log_height < 90) {
+			prev_height = log_height;
+			log_height = 90;
+		} else {
+			log_height = prev_height || 45;
+		}
+	}
+
+	function clear_logs() {
+		logs = [];
+	}
 </script>
 
 <style>
@@ -147,6 +183,17 @@
 		opacity: .25;
 	}
 
+	button {
+		color: #999;
+		font-size: 12px;
+		text-transform: uppercase;
+		display: block;
+	}
+
+	button:hover {
+		color: #333;
+	}
+
 	.overlay {
 		position: absolute;
 		bottom: 0;
@@ -155,14 +202,29 @@
 </style>
 
 <div class="iframe-container">
-	<iframe
-		title="Result"
-		class:inited
-		bind:this={iframe}
-		sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals {relaxed ? 'allow-same-origin' : ''}"
-		class="{error || pending || pending_imports ? 'greyed-out' : ''}"
-		{srcdoc}
-	></iframe>
+	<PaneWithPanel pos={100} panel="Console">
+		<div slot="main">
+			<iframe
+				title="Result"
+				class:inited
+				bind:this={iframe}
+				sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals {relaxed ? 'allow-same-origin' : ''}"
+				class="{error || pending || pending_imports ? 'greyed-out' : ''}"
+				{srcdoc}
+			></iframe>
+		</div>
+
+		<div slot="panel-header">
+			<button on:click|stopPropagation={clear_logs}>
+				{#if (logs.length > 0)}({logs.length}){/if}
+				Clear
+			</button>
+		</div>
+
+		<section slot="panel-body">
+			<Console {logs} on:clear={clear_logs}/>
+		</section>
+	</PaneWithPanel>
 
 	<div class="overlay">
 		{#if error}
