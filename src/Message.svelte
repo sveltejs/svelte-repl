@@ -73,6 +73,10 @@
 	.warning {
 		background-color: #e47e0a;
 	}
+
+	.info {
+		background-color: var(--second);
+	}
 </style>
 
 <div in:slide={{delay: 150, duration: 100}} out:slide={{duration: 100}} class="message {kind}" class:truncate>
