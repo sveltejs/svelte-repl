@@ -7,6 +7,10 @@
 <div class="container">
 	{#each logs as log}
 		<div class="log console-{log.level}">
+			{#if log.count > 1}
+				<span class="count">{log.count}x</span>
+			{/if}
+
 			{#if log.level === 'clear'}
 				<span class="info">Console was cleared</span>
 			{:else if log.level === 'unclonable'}
@@ -40,6 +44,12 @@
 	.console-error {
 		background: #fff0f0;
 		border-color: #fed6d7;
+	}
+
+	.count {
+		color: #999;
+		font-size: 12px;
+		line-height: 1.2;
 	}
 
 	.info {

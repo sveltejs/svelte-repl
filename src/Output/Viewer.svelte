@@ -35,6 +35,8 @@
 	let log_height = 90;
 	let prev_height;
 
+	let last_console_event;
+
 	onMount(() => {
 		proxy = new ReplProxy(iframe, {
 			on_fetch_progress: progress => {
@@ -49,11 +51,22 @@
 				error.message = 'Uncaught (in promise): ' + error.message;
 				push_logs({ level: 'error', args: [error]});
 			},
-			on_console: event => {
-				if (event.level === 'clear') {
-					logs = [{ level: 'clear' }];
+			on_console: log => {
+				if (log.level === 'clear') {
+					logs = [log];
+				} else if (log.duplicate) {
+					const last_log = logs[logs.length - 1];
+
+					if (last_log) {
+						last_log.count = (last_log.count || 1) + 1;
+						logs = logs;
+					} else {
+						last_console_event.count = 1;
+						logs = [last_console_event];
+					}
 				} else {
-					push_logs(event);
+					push_logs(log);
+					last_console_event = log;
 				}
 			}
 		});

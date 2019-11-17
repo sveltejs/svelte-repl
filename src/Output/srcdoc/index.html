@@ -70,13 +70,25 @@
 			}).call(this);
 
 			// TODO handle group/groupEnd, table, trace, etc
+			let previous = { level: null, args: null };
+
 			['clear', 'log', 'info', 'dir', 'warn', 'error'].forEach((level) => {
 				const original = console[level];
 				console[level] = (...args) => {
-					try {
-						parent.postMessage({ action: 'console', level, args }, '*');
-					} catch (err) {
-						parent.postMessage({ action: 'console', level: 'unclonable' }, '*');
+					if (
+						previous.level === level &&
+						previous.args.length === args.length &&
+						previous.args.every((a, i) => a === args[i])
+					) {
+						parent.postMessage({ action: 'console', level, duplicate: true }, '*');
+					} else {
+						previous = { level, args };
+
+						try {
+							parent.postMessage({ action: 'console', level, args }, '*');
+						} catch (err) {
+							parent.postMessage({ action: 'console', level: 'unclonable' }, '*');
+						}
 					}
 
 					original(...args);
