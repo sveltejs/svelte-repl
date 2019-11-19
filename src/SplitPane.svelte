@@ -34,6 +34,17 @@
 		dispatch('change');
 	}
 
+	function setTouchPos(event) {
+		const { top, left } = refs.container.getBoundingClientRect();
+
+		const px = type === 'vertical'
+			? (event.touches[0].clientY - top)
+			: (event.touches[0].clientX - left);
+
+		pos = 100 * px / size;
+		dispatch('change');
+	}
+
 	function drag(node, callback) {
 		const mousedown = event => {
 			if (event.which !== 1) return;
@@ -57,7 +68,35 @@
 
 		return {
 			destroy() {
-				node.removeEventListener('mousedown', onmousedown, false);
+				node.removeEventListener('mousedown', mousedown, false);
+			}
+		};
+	}
+
+	function touchDrag(node, callback) {
+		const touchdown = event => {
+			if (event.targetTouches.length > 1) return;
+
+			event.preventDefault();
+
+			dragging = true;
+
+			const ontouchend = () => {
+				dragging = false;
+
+				window.removeEventListener('touchmove', callback, false);
+				window.removeEventListener('touchend', ontouchend, false);
+			};
+
+			window.addEventListener('touchmove', callback, false);
+			window.addEventListener('touchend', ontouchend, false);
+		}
+
+		node.addEventListener('touchstart', touchdown, false);
+
+		return {
+			destroy() {
+				node.removeEventListener('touchstart', touchdown, false);
 			}
 		};
 	}
@@ -159,7 +198,7 @@
 	</div>
 
 	{#if !fixed}
-		<div class="{type} divider" style="{side}: calc({pos}% - 8px)" use:drag={setPos}></div>
+		<div class="{type} divider" style="{side}: calc({pos}% - 8px)" use:drag={setPos} use:touchDrag={setTouchPos}></div>
 	{/if}
 </div>
 
