@@ -1,5 +1,9 @@
 # svelte-repl changelog
 
+## 0.1.17
+
+* Update template ([svelte/#3971](https://github.com/sveltejs/svelte/pull/3971))
+
 ## 0.1.16
 
 * Reinstate background color on info message ([#63](https://github.com/sveltejs/svelte-repl/pull/63))
