@@ -116,6 +116,7 @@
 		margin: 0;
 		color: #999;
 		border-radius: 0;
+		cursor: pointer;
 	}
 
 	.file-tabs .button:first-child {
