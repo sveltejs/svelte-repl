@@ -6,6 +6,7 @@
 	import ModuleEditor from './Input/ModuleEditor.svelte';
 	import Output from './Output/index.svelte';
 	import Bundler from './Bundler.js';
+	import Sizes, { defaultSizes } from './Sizes.js';
 	import { is_browser } from './env.js';
 
 	export let workersUrl;
@@ -68,6 +69,7 @@
 	const components = writable([]);
 	const selected = writable(null);
 	const bundle = writable(null);
+	const bundleSizes = writable(defaultSizes)
 
 	const compile_options = writable({
 		generate: 'dom',
@@ -85,8 +87,12 @@
 	let current_token;
 	async function rebundle() {
 		const token = current_token = {};
+		bundleSizes.set(defaultSizes);
 		const result = await bundler.bundle($components);
-		if (result && token === current_token) bundle.set(result);
+		if (result && token === current_token){
+			bundle.set(result);
+			bundleSizes.set(await sizes.getSizes(result.dom.code, $components));
+		}
 	}
 
 	// TODO this is a horrible kludge, written in a panic. fix it
@@ -101,6 +107,7 @@
 		components,
 		selected,
 		bundle,
+		bundleSizes,
 		compile_options,
 
 		rebundle,
@@ -173,6 +180,8 @@
 			status = message;
 		}
 	});
+
+	const sizes = is_browser && new Sizes(workersUrl, packagesUrl);
 
 	$: if (output && $selected) {
 		output.update($selected, $compile_options);

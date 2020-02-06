@@ -5,10 +5,11 @@
 	import PaneWithPanel from './PaneWithPanel.svelte';
 	import CompilerOptions from './CompilerOptions.svelte';
 	import Compiler from './Compiler.js';
+	import BundleSizes from './BundleSizes.svelte';
 	import CodeMirror from '../CodeMirror.svelte';
 	import { is_browser } from '../env.js';
 
-	const { register_output } = getContext('REPL');
+	const { bundleSizes, register_output } = getContext('REPL');
 
 	export let svelteUrl;
 	export let workersUrl;
@@ -120,6 +121,11 @@
 		class:active="{view === 'css'}"
 		on:click="{() => view = 'css'}"
 	>CSS output</button>
+
+	<button
+    	class:active="{view === 'sizes'}"
+    	on:click="{() => (view = 'sizes')}"
+	>Bundle sizes</button>
 </div>
 
 <!-- component viewer -->
@@ -170,3 +176,9 @@
 		readonly
 	/>
 </div>
+
+<!-- bundle sizes -->
+<div class="tab-content" class:visible={view === 'sizes'}>
+	<BundleSizes {...$bundleSizes} />
+</div>
+
