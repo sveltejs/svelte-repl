@@ -185,7 +185,6 @@ async function get_bundle(uid, mode, cache, lookup) {
 					generate: mode,
 					format: 'esm',
 					dev: true,
-					name,
 					filename: name + '.svelte'
 				}, has_loopGuardTimeout_feature() && {
 					loopGuardTimeout: 100
