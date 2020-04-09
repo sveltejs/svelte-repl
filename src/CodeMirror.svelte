@@ -75,6 +75,9 @@
 		svelte: {
 			name: 'handlebars',
 			base: 'text/html'
+		},
+		md: {
+			name: 'markdown'
 		}
 	};
 
@@ -158,7 +161,8 @@
 			},
 			readOnly: readonly,
 			autoCloseBrackets: true,
-			autoCloseTags: true
+			autoCloseTags: true,
+			extraKeys: { "Enter": "newlineAndIndentContinueMarkdownList" }
 		};
 
 		if (!tab) opts.extraKeys = {
