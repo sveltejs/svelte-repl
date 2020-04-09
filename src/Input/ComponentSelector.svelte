@@ -21,7 +21,7 @@
 	}
 
 	function closeEdit() {
-		const match = /(.+)\.(svelte|js)$/.exec($selected.name);
+		const match = /(.+)\.(svelte|js|md)$/.exec($selected.name);
 		$selected.name = match ? match[1] : $selected.name;
 		if (isComponentNameUsed($selected)) {
 			$selected.name = $selected.name + '_1';
