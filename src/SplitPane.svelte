@@ -7,7 +7,7 @@
 	export let type;
 	export let pos = 50;
 	export let fixed = false;
-	export let buffer = 40;
+	export let buffer = 42;
 	export let min;
 	export let max;
 
