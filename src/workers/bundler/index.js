@@ -122,6 +122,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 			// importing from another file in REPL
 			if (importee in lookup) return importee;
 			if ((importee + '.js') in lookup) return importee + '.js';
+			if ((importee + '.json') in lookup) return importee + '.json';
 
 			// remove trailing slash
 			if (importee.endsWith('/')) importee = importee.slice(0, -1);

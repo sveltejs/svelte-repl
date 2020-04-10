@@ -27,7 +27,7 @@
 		set: async (selected, options) => {
 			selected_type = selected.type;
 
-			if (selected.type === 'js') {
+			if (selected.type === 'js' || selected.type === 'json') {
 				js_editor.set(`/* Select a component to see its compiled code */`);
 				css_editor.set(`/* Select a component to see its compiled code */`);
 				return;
@@ -46,7 +46,7 @@
 		},
 
 		update: async (selected, options) => {
-			if (selected.type === 'js') return;
+			if (selected.type === 'js' || selected.type === 'json') return;
 
 			if (selected.type === 'md') {
 				markdown = marked(selected.source);
