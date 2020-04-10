@@ -7,7 +7,9 @@ import 'codemirror/mode/handlebars/handlebars.js';
 import 'codemirror/mode/htmlmixed/htmlmixed.js';
 import 'codemirror/mode/xml/xml.js';
 import 'codemirror/mode/css/css.js';
+import 'codemirror/mode/markdown/markdown.js';
 import 'codemirror/addon/edit/closebrackets.js';
 import 'codemirror/addon/edit/closetag.js';
+import 'codemirror/addon/edit/continuelist.js';
 
 export default CodeMirror;
