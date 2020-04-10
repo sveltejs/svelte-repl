@@ -24,7 +24,7 @@
 
 	register_output({
 		set: async (selected, options) => {
-			if (selected.type === 'js') {
+			if (selected.type === 'js' || selected.type === 'json') {
 				js_editor.set(`/* Select a component to see its compiled code */`);
 				css_editor.set(`/* Select a component to see its compiled code */`);
 				return;
@@ -38,7 +38,7 @@
 		},
 
 		update: async (selected, options) => {
-			if (selected.type === 'js') return;
+			if (selected.type === 'js' || selected.type === 'json') return;
 
 			const compiled = await compiler.compile(selected, options);
 			if (!js_editor) return; // unmounted

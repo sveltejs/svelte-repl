@@ -121,6 +121,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 
 			// importing from another file in REPL
 			if (importee in lookup) return importee;
+			if ((importee + '.json') in lookup) return importee + '.json';
 
 			// importing from a URL
 			if (importee.startsWith('http:') || importee.startsWith('https:')) return importee;
