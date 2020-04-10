@@ -11,5 +11,6 @@ import 'codemirror/mode/markdown/markdown.js';
 import 'codemirror/addon/edit/closebrackets.js';
 import 'codemirror/addon/edit/closetag.js';
 import 'codemirror/addon/edit/continuelist.js';
+import 'codemirror/addon/comment/comment.js';
 
 export default CodeMirror;
