@@ -24,7 +24,11 @@
 		const match = /(.+)\.(svelte|js|json|md)$/.exec($selected.name);
 		$selected.name = match ? match[1] : $selected.name;
 		if (isComponentNameUsed($selected)) {
-			$selected.name = $selected.name + '_1';
+			let i = 1;
+			let name = $selected.name;
+			do {
+				$selected.name = `${name}_${i++}`;
+			} while (isComponentNameUsed($selected));
 		}
 		if (match && match[2]) $selected.type = match[2];
 
@@ -87,6 +91,38 @@
 	function isComponentNameUsed(editing) {
 		return $components.find(component => component !== editing && component.name === editing.name);
 	}
+
+	// drag and drop
+	let from = null;
+	let over = null;
+
+	function dragStart(event) {
+		from = event.currentTarget.id;
+	}
+
+	function dragLeave() {
+		over = null;
+	}
+
+	function dragOver(event) {
+		event.preventDefault();
+		over = event.currentTarget.id;
+	}
+
+	function dragEnd(event) {
+		event.preventDefault();
+
+		if (from && over) {
+			const from_index = $components.findIndex(component => component.name === from);
+			const to_index = $components.findIndex(component => component.name === over);
+
+			const from_component = $components[from_index];
+
+			$components.splice(from_index, 1);
+			components.set($components.slice(0, to_index).concat(from_component).concat($components.slice(to_index)));
+		}
+		from = over = null;
+	}
 </script>
 
 <style>
@@ -112,14 +148,10 @@
 		background: white;
 		border: none;
 		border-bottom: 3px solid transparent;
-		padding: 12px 14px 8px 8px;
+		padding: 12px 14px 8px 16px;
 		margin: 0;
 		color: #999;
 		border-radius: 0;
-	}
-
-	.file-tabs .button:first-child {
-		padding-left: 12px;
 	}
 
 	.file-tabs .button.active {
@@ -141,7 +173,7 @@
 	input {
 		position: absolute;
 		width: 100%;
-		left: 8px;
+		left: 16px;
 		top: 12px;
 		font: 400 12px/1.5 var(--font);
 		border: none;
@@ -178,6 +210,14 @@
 		display: block;
 	}
 
+	.file-tabs .button.drag-over {
+		background: #67677814;
+	}
+
+	.file-tabs .button.drag-over {
+		cursor: move;
+	}
+
 	.add-new {
 		position: absolute;
 		left: 0;
@@ -190,6 +230,22 @@
 
 	.add-new:hover {
 		color: var(--flash) !important;
+	}
+
+	.drag-handle {
+		cursor: move;
+		width: 5px;
+		height: 25px;
+		position: absolute;
+		left: 5px;
+		top: 9px;
+		--drag-handle-color: #dedede;
+		background: linear-gradient(to right,
+			var(--drag-handle-color) 1px, white 1px,
+			white 2px, var(--drag-handle-color) 2px,
+			var(--drag-handle-color) 3px, white 3px,
+			white 4px, var(--drag-handle-color) 4px
+		);
 	}
 
 	svg {
@@ -218,10 +274,18 @@
 					class="button"
 					role="button"
 					class:active="{component === $selected}"
+					class:draggable={component !== editing && index !== 0}
+					class:drag-over={over === component.name}
 					on:click="{() => selectComponent(component)}"
 					on:dblclick="{e => e.stopPropagation()}"
+					draggable={component !== editing}
+					on:dragstart={dragStart}
+					on:dragover={dragOver}
+					on:dragleave={dragLeave}
+					on:drop={dragEnd}
 				>
-					{#if component.name == 'App' && index === 0}
+					<i class="drag-handle"></i>
+					{#if component.name === 'App' && component !== editing}
 						<div class="uneditable">
 							App.svelte
 						</div>
