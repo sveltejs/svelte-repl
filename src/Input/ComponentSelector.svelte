@@ -235,11 +235,11 @@
 	.drag-handle {
 		cursor: move;
 		width: 5px;
-    height: 25px;
-    position: absolute;
-    left: 5px;
-    top: 9px;
-    --drag-handle-color: #dedede;
+		height: 25px;
+		position: absolute;
+		left: 5px;
+		top: 9px;
+		--drag-handle-color: #dedede;
 		background: linear-gradient(to right,
 			var(--drag-handle-color) 1px, white 1px,
 			white 2px, var(--drag-handle-color) 2px,
