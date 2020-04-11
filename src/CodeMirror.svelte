@@ -162,13 +162,18 @@
 			readOnly: readonly,
 			autoCloseBrackets: true,
 			autoCloseTags: true,
-			extraKeys: { "Enter": "newlineAndIndentContinueMarkdownList" }
+			extraKeys: {
+				'Enter': 'newlineAndIndentContinueMarkdownList',
+				'Ctrl-/': 'toggleComment',
+				'Cmd-/': 'toggleComment',
+
+			}
 		};
 
-		if (!tab) opts.extraKeys = {
-			Tab: tab,
-			'Shift-Tab': tab
-		};
+		if (!tab) {
+			opts.extraKeys['Tab'] = tab;
+			opts.extraKeys['Shift-Tab'] = tab;
+		}
 
 		// Creating a text editor is a lot of work, so we yield
 		// the main thread for a moment. This helps reduce jank
