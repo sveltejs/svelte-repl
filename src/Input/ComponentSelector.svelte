@@ -24,7 +24,11 @@
 		const match = /(.+)\.(svelte|js)$/.exec($selected.name);
 		$selected.name = match ? match[1] : $selected.name;
 		if (isComponentNameUsed($selected)) {
-			$selected.name = $selected.name + '_1';
+			let i = 1;
+			let name = $selected.name;
+			do {
+				$selected.name = `${name}_${i++}`;
+			} while (isComponentNameUsed($selected));
 		}
 		if (match && match[2]) $selected.type = match[2];
 
@@ -281,7 +285,7 @@
 					on:drop={dragEnd}
 				>
 					<i class="drag-handle"></i>
-					{#if component.is_entry}
+					{#if component.name === 'App' && component !== editing}
 						<div class="uneditable">
 							App.svelte
 						</div>
