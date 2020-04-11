@@ -75,9 +75,10 @@
 			['clear', 'log', 'info', 'dir', 'warn', 'error'].forEach((level) => {
 				const original = console[level];
 				console[level] = (...args) => {
-					const stringifiedArgs = JSON.stringify(args);
+					const stringifiedArgs = stringify(args);
 					if (
 						previous.level === level &&
+						previous.args &&
 						previous.args === stringifiedArgs
 					) {
 						parent.postMessage({ action: 'console', level, duplicate: true }, '*');
@@ -94,6 +95,14 @@
 					original(...args);
 				}
 			})
+
+			function stringify(args) {
+				try {
+					return JSON.stringify(args);
+				} catch (error) {
+					return null;
+				}
+			}
 		</script>
 	</head>
 	<body></body>
