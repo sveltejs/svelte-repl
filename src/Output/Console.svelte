@@ -1,5 +1,5 @@
 <script>
-	import JSONNode from 'svelte-json-tree';
+	import Inspect from 'svelte-inspect';
 
 	export let logs;
 </script>
@@ -17,7 +17,7 @@
 				<span class="info error">Message could not be cloned. Open devtools to see it</span>
 			{:else}
 				{#each log.args as arg}
-					<JSONNode value={arg} />
+					<Inspect.Value value={arg} />
 				{/each}
 			{/if}
 		</div>
