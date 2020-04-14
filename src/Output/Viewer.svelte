@@ -12,6 +12,8 @@
 
 	export let error; // TODO should this be exposed as a prop?
 	let logs = [];
+	let log_group_stack = [];
+	let current_log_group = logs;
 
 	export function setProp(prop, value) {
 		if (!proxy) return;
@@ -53,21 +55,22 @@
 			},
 			on_console: log => {
 				if (log.level === 'clear') {
-					logs = [log];
+					clear_logs();
+					push_logs(log);
 				} else if (log.duplicate) {
-					const last_log = logs[logs.length - 1];
-
-					if (last_log) {
-						last_log.count = (last_log.count || 1) + 1;
-						logs = logs;
-					} else {
-						last_console_event.count = 1;
-						logs = [last_console_event];
-					}
+					increment_duplicate_log();
 				} else {
 					push_logs(log);
-					last_console_event = log;
 				}
+			},
+			on_console_group: action => {
+				group_logs(action.label, false);
+			},
+			on_console_group_end: () => {
+				ungroup_logs();
+			},
+			on_console_group_collapsed: action => {
+				group_logs(action.label, true);
 			}
 		});
 
@@ -144,7 +147,32 @@
 	}
 
 	function push_logs(log) {
-		logs = [...logs, log];
+		current_log_group.push(last_console_event = log);
+		logs = logs;
+	}
+
+	function group_logs(label, collapsed) {
+		const group_log = { level: 'group', label, collapsed, logs: [] };
+		current_log_group.push(group_log);
+		log_group_stack.push(current_log_group);
+		current_log_group = group_log.logs;
+		logs = logs;
+	}
+
+	function ungroup_logs() {
+		current_log_group = log_group_stack.pop();
+	}
+
+	function increment_duplicate_log() {
+		const last_log = current_log_group[current_log_group.length - 1];
+
+		if (last_log) {
+			last_log.count = (last_log.count || 1) + 1;
+			logs = logs;
+		} else {
+			last_console_event.count = 1;
+			push_logs(last_console_event);
+		}
 	}
 
 	function on_toggle_console() {
@@ -157,7 +185,7 @@
 	}
 
 	function clear_logs() {
-		logs = [];
+		current_log_group = logs = [];
 	}
 </script>
 

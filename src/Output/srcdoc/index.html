@@ -94,7 +94,20 @@
 
 					original(...args);
 				}
-			})
+			});
+
+			[
+				{ method: 'group', action: 'console_group' },
+				{ method: 'groupEnd', action: 'console_group_end' },
+				{ method: 'groupCollapsed', action: 'console_group_collapsed' },
+			].forEach((group_action) => {
+				const original = console[group_action.method];
+				console[group_action.method] = (label) => {
+					parent.postMessage({ action: group_action.action, label }, '*');
+
+					original(label);
+				};
+			});
 
 			function stringify(args) {
 				try {
