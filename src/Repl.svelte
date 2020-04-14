@@ -19,6 +19,8 @@
 	export let injectedJS = '';
 	export let injectedCSS = '';
 
+	const historyMap = new Map();
+
 	export function toJSON() {
 		return {
 			imports: $bundle.imports,
@@ -155,8 +157,14 @@
 	});
 
 	function handle_select(component) {
+		historyMap.set($selected.name, module_editor.getHistory());
 		selected.set(component);
 		module_editor.set(component.source, component.type);
+		if (historyMap.has($selected.name)) {
+			module_editor.setHistory(historyMap.get($selected.name));
+		} else {
+			module_editor.clearHistory();
+		}
 		output.set($selected, $compile_options);
 	}
 

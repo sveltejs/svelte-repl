@@ -63,6 +63,18 @@
 		editor.focus();
 	}
 
+	export function getHistory() {
+		return editor.getHistory();
+	}
+
+	export function setHistory(history) {
+		editor.setHistory(history);
+	}
+
+	export function clearHistory() {
+		editor.clearHistory();
+	}
+
 	const modes = {
 		js: {
 			name: 'javascript',
