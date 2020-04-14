@@ -58,18 +58,9 @@
 					clear_logs();
 					push_logs(log);
 				} else if (log.duplicate) {
-					const last_log = logs[logs.length - 1];
-
-					if (last_log) {
-						last_log.count = (last_log.count || 1) + 1;
-						logs = logs;
-					} else {
-						last_console_event.count = 1;
-						logs = [last_console_event];
-					}
+					increment_duplicate_log();
 				} else {
 					push_logs(log);
-					last_console_event = log;
 				}
 			},
 			on_console_group: action => {
@@ -156,7 +147,7 @@
 	}
 
 	function push_logs(log) {
-		current_log_group.push(log);
+		current_log_group.push(last_console_event = log);
 		logs = logs;
 	}
 
@@ -170,6 +161,18 @@
 
 	function ungroup_logs() {
 		current_log_group = log_group_stack.pop();
+	}
+
+	function increment_duplicate_log() {
+		const last_log = current_log_group[current_log_group.length - 1];
+
+		if (last_log) {
+			last_log.count = (last_log.count || 1) + 1;
+			logs = logs;
+		} else {
+			last_console_event.count = 1;
+			push_logs(last_console_event);
+		}
 	}
 
 	function on_toggle_console() {
