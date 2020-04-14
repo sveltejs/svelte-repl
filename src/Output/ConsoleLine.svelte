@@ -84,19 +84,19 @@
 
 	.outline {
 		border-left: 1px solid #9c9cab;
-    position: absolute;
-    top: 0;
-    bottom: -1px;
+		position: absolute;
+		top: 0;
+		bottom: -1px;
 	}
 
 	.arrow {
-    position: absolute;
-    font-size: 0.6em;
-    transition: 150ms;
+		position: absolute;
+		font-size: 0.6em;
+		transition: 150ms;
 		transform-origin: 50% 50%;
 		transform: translateX(-50%);
 	}
-	
+
 	.arrow.expand {
 		transform: translateX(-50%) rotateZ(90deg);
 	}
