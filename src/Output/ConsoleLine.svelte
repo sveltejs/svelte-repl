@@ -1,5 +1,6 @@
 <script>
 	import JSONNode from 'svelte-json-tree';
+	import ConsoleTable from './ConsoleTable.svelte';
 
 	export let log;
 	export let level = 1;
@@ -9,6 +10,9 @@
 	}
 </script>
 
+{#if log.level === 'table'}
+	<ConsoleTable data={log.args[0]} columns={log.args[1]} />
+{/if}
 
 <div class="log console-{log.level}" style="padding-left: {level * 15}px" on:click={toggleGroupCollapse}>
 	{#if log.count > 1}
@@ -22,6 +26,8 @@
 	{:else if log.level === 'group'}
 		<div class="arrow" class:expand={!log.collapsed}>▶</div>
 		<span class="title">{log.label}</span>
+	{:else if log.level === 'table'}
+		<JSONNode value={log.args[0]} />
 	{:else}
 		{#each log.args as arg}
 			<JSONNode value={arg} />
