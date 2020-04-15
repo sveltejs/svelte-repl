@@ -38,7 +38,7 @@
 		await output_ready;
 
 		injectedCSS = data.css || '';
-		module_editor.set($selected.source, $selected.type);
+		await module_editor.set($selected.source, $selected.type);
 		output.set($selected, $compile_options);
 
 		historyMap.clear();

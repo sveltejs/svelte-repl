@@ -72,7 +72,7 @@
 	}
 
 	export function clearHistory() {
-		editor.clearHistory();
+		if (editor) editor.clearHistory();
 	}
 
 	const modes = {
@@ -135,18 +135,16 @@
 	}
 
 	onMount(() => {
-		if (_CodeMirror) {
-			CodeMirror = _CodeMirror;
-			createEditor(mode || 'svelte').then(() => {
-				if (editor) editor.setValue(code || '');
-			});
-		} else {
-			codemirror_promise.then(async mod => {
+		(async () => {
+			if (!_CodeMirror) {
+				let mod = await codemirror_promise;
 				CodeMirror = mod.default;
-				await createEditor(mode || 'svelte');
-				if (editor) editor.setValue(code || '');
-			});
-		}
+			} else {
+				CodeMirror = _CodeMirror;
+			}
+			await createEditor(mode || 'svelte');
+			if (editor) editor.setValue(code || '');
+		})();
 
 		return () => {
 			destroyed = true;
