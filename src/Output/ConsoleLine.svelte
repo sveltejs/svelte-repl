@@ -42,6 +42,14 @@
 	{/each}
 {/if}
 
+{#if log.level === 'trace'}
+	<div class="trace">
+		{#each log.stack.split('\n').slice(2) as stack}
+			<div>{stack.replace(/^\s*at\s+/, '')}</div>
+		{/each}
+	</div>
+{/if}
+
 <style>
 	.log {
 		border-bottom: 1px solid #eee;
@@ -70,6 +78,21 @@
 	.console-group {
 		cursor: pointer;
 		user-select: none;
+	}
+
+	.console-trace {
+		border-bottom: none;
+	}
+
+	.trace {
+		border-bottom: 1px solid #eee;
+		font-size: 12px;
+		font-family: var(--font-mono);
+		padding: 4px 0 2px;
+	}
+
+	.trace > :global(div) {
+		margin-left: 15px;
 	}
 
 	.count {
