@@ -69,10 +69,10 @@
 				});
 			}).call(this);
 
-			// TODO handle group/groupEnd, table, trace, etc
+			// TODO handle trace, etc
 			let previous = { level: null, args: null };
 
-			['clear', 'log', 'info', 'dir', 'warn', 'error'].forEach((level) => {
+			['clear', 'log', 'info', 'dir', 'warn', 'error', 'table'].forEach((level) => {
 				const original = console[level];
 				console[level] = (...args) => {
 					const stringifiedArgs = stringify(args);
