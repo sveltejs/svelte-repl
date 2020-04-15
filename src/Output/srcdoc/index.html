@@ -140,7 +140,8 @@
 			const original_assert = console.assert;
 			console.assert = (condition, ...args) => {
 				if (condition) {
-					parent.postMessage({ action: 'console', level: 'error', args: [new Error('Assertion failed:'), ...args] }, '*');
+					const stack = new Error().stack;
+					parent.postMessage({ action: 'console', level: 'assert', args: ['Assertion failed:', ...args], stack }, '*');
 				}
 				original_assert(condition, ...args);
 			};

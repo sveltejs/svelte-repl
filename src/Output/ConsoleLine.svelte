@@ -48,7 +48,7 @@
 	{/each}
 {/if}
 
-{#if log.level === 'trace'}
+{#if log.level === 'trace' || log.level === 'assert'}
 	<div class="trace">
 		{#each log.stack.split('\n').slice(2) as stack}
 			<div>{stack.replace(/^\s*at\s+/, '')}</div>
@@ -76,7 +76,7 @@
 		border-color: #fff4c4;
 	}
 
-	.console-error {
+	.console-error, .console-assert {
 		background: #fff0f0;
 		border-color: #fed6d7;
 	}
@@ -86,8 +86,13 @@
 		user-select: none;
 	}
 
-	.console-trace {
+	.console-trace, .console-assert {
 		border-bottom: none;
+	}
+
+	.console-assert + .trace {
+		background: #fff0f0;
+		border-color: #fed6d7;
 	}
 
 	.trace {
