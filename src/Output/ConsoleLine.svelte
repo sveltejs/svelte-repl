@@ -22,6 +22,10 @@
 	{:else if log.level === 'group'}
 		<div class="arrow" class:expand={!log.collapsed}>▶</div>
 		<span class="title">{log.label}</span>
+	{:else if log.level.startsWith('system')}
+		{#each log.args as arg}
+			{arg}
+		{/each}
 	{:else}
 		{#each log.args as arg}
 			<JSONNode value={arg} />
@@ -44,6 +48,8 @@
 		padding: 5px 10px 0px;
 		display: flex;
 		position: relative;
+		font-size: 12px;
+		font-family: var(--font-mono);
 	}
 
 	.log > :global(*) {
@@ -51,7 +57,7 @@
 		font-family: var(--font-mono);
 	}
 
-	.console-warn {
+	.console-warn, .console-system-warn {
 		background: #fffbe6;
 		border-color: #fff4c4;
 	}

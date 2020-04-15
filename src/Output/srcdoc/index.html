@@ -109,6 +109,35 @@
 				};
 			});
 
+			const timers = new Map();
+			const original_time = console.time;
+			const original_timelog = console.timeLog;
+			const original_timeend = console.timeEnd;
+
+			console.time = (label = 'default') => {
+				original_time(label);
+				timers.set(label, performance.now());
+			}
+			console.timeLog = (label = 'default') => {
+				original_timelog(label);
+				const now = performance.now();
+				if (timers.has(label)) {
+					parent.postMessage({ action: 'console', level: 'system-log', args: [`${label}: ${now - timers.get(label)}ms`] }, '*');
+				} else {
+					parent.postMessage({ action: 'console', level: 'system-warn', args: [`Timer '${label}' does not exist`] }, '*');
+				}
+			}
+			console.timeEnd = (label = 'default') => {
+				original_timeend(label);
+				const now = performance.now();
+				if (timers.has(label)) {
+					parent.postMessage({ action: 'console', level: 'system-log', args: [`${label}: ${now - timers.get(label)}ms`] }, '*');
+				} else {
+					parent.postMessage({ action: 'console', level: 'system-warn', args: [`Timer '${label}' does not exist`] }, '*');
+				}
+				timers.delete(label);
+			};
+
 			function stringify(args) {
 				try {
 					return JSON.stringify(args);
