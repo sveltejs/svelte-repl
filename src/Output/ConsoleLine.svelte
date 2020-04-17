@@ -14,9 +14,17 @@
 	<ConsoleTable data={log.args[0]} columns={log.args[1]} />
 {/if}
 
-<div class="log console-{log.level}" style="padding-left: {level * 15}px" on:click={toggleGroupCollapse}>
+<div class="log console-{log.level}" style="padding-left: {level * 15}px" on:click={log.level === 'group' ? toggleGroupCollapse : undefined}>
 	{#if log.count > 1}
 		<span class="count">{log.count}x</span>
+	{/if}
+
+	{#if log.level === 'trace' || log.level === 'assert'}
+		<div class="arrow" class:expand={!log.collapsed} on:click={toggleGroupCollapse}>▶</div>
+	{/if}
+
+	{#if log.level === 'assert'}
+		<span class="assert">Assertion failed:</span>
 	{/if}
 
 	{#if log.level === 'clear'}
@@ -48,7 +56,7 @@
 	{/each}
 {/if}
 
-{#if log.level === 'trace' || log.level === 'assert'}
+{#if (log.level === 'trace' || log.level === 'assert') && !log.collapsed}
 	<div class="trace">
 		{#each log.stack.split('\n').slice(2) as stack}
 			<div>{stack.replace(/^\s*at\s+/, '')}</div>
@@ -81,7 +89,7 @@
 		border-color: #fed6d7;
 	}
 
-	.console-group {
+	.console-group, .arrow {
 		cursor: pointer;
 		user-select: none;
 	}
@@ -134,11 +142,11 @@
 		font-size: 0.6em;
 		transition: 150ms;
 		transform-origin: 50% 50%;
-		transform: translateX(-50%);
+		transform: translateY(1px) translateX(-50%);
 	}
 
 	.arrow.expand {
-		transform: translateX(-50%) rotateZ(90deg);
+		transform: translateY(1px) translateX(-50%) rotateZ(90deg);
 	}
 
 	.title {
@@ -147,5 +155,11 @@
 		font-weight: bold;
 		padding-left: 11px;
 		height: 19px;
+	}
+
+	.assert {
+		padding-left: 11px;
+		font-weight: bold;
+		color: #da106e;
 	}
 </style>
