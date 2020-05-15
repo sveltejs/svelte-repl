@@ -19,6 +19,8 @@
 	export let injectedJS = '';
 	export let injectedCSS = '';
 
+	const historyMap = new Map();
+
 	export function toJSON() {
 		return {
 			imports: $bundle.imports,
@@ -36,8 +38,11 @@
 		await output_ready;
 
 		injectedCSS = data.css || '';
-		module_editor.set($selected.source, $selected.type);
+		await module_editor.set($selected.source, $selected.type);
 		output.set($selected, $compile_options);
+
+		historyMap.clear();
+		module_editor.clearHistory();
 	}
 
 	export function update(data) {
@@ -56,6 +61,8 @@
 		} else {
 			module_editor.set(matched_component.source, matched_component.type);
 			output.set(matched_component, $compile_options);
+
+			module_editor.clearHistory();
 		}
 	}
 
@@ -155,9 +162,19 @@
 	});
 
 	function handle_select(component) {
+		historyMap.set(get_component_name($selected), module_editor.getHistory());
 		selected.set(component);
 		module_editor.set(component.source, component.type);
+		if (historyMap.has(get_component_name($selected))) {
+			module_editor.setHistory(historyMap.get(get_component_name($selected)));
+		} else {
+			module_editor.clearHistory();
+		}
 		output.set($selected, $compile_options);
+	}
+
+	function get_component_name(component) {
+		return `${component.name}.${component.type}`
 	}
 
 	let input;
