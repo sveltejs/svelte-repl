@@ -1,5 +1,13 @@
 # svelte-repl changelog
 
+## 0.1.19
+
+* Keep separate undo history in separate tabs ([#3](https://github.com/sveltejs/svelte-repl/issues/3))
+* Allow resizing pane with touch events ([#67](https://github.com/sveltejs/svelte-repl/pull/67))
+* Fix pointer style on component selector buttons ([#69](https://github.com/sveltejs/svelte-repl/pull/69))
+* Support the remaining `console.*` utilities ([#104](https://github.com/sveltejs/svelte-repl/pull/104))
+* Prevent browser translation in the code editor ([#113](https://github.com/sveltejs/svelte-repl/pull/113))
+
 ## 0.1.18
 
 * Allow importing .js files without an extension ([#30](https://github.com/sveltejs/svelte-repl/issues/30))
