@@ -1,0 +1,36 @@
+{
+  "name": "svelte-app",
+  "version": "1.0.0",
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.1",
+    "mini-css-extract-plugin": "^0.6.0",
+    "serve": "^11.0.0",
+    "style-loader": "^0.23.1",
+    "svelte": "^3.0.0",
+    "svelte-loader": "2.13.3",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.3.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-svelte3": "^2.7.3",
+    "prettier": "^1.19.1",
+    "prettier-plugin-svelte": "^0.7.0"
+  },
+  "dependencies": {
+    "codemirror": "^5.49.2",
+    "estree-walker": "^0.9.0",
+    "marked": "^0.8.2",
+    "sourcemap-codec": "^1.4.6",
+    "svelte-json-tree": "0.0.5",
+    "yootils": "0.0.16"
+  },
+  "files": [
+    "src",
+    "workers"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev": "webpack-dev-server --content-base public"
+  }
+}
