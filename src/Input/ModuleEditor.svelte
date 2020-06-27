@@ -45,7 +45,7 @@
 </style>
 
 <div class="editor-wrapper">
-	<div class="editor">
+	<div class="editor notranslate" translate="no">
 		<CodeMirror
 			bind:this={editor}
 			{errorLoc}

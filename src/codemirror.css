@@ -50,6 +50,37 @@
 .CodeMirror-guttermarker { color: black; }
 .CodeMirror-guttermarker-subtle { color: #999; }
 
+/* FOLD GUTTER */
+
+.CodeMirror-foldmarker {
+  color: #414141;
+  text-shadow: #ff9966 1px 1px 2px, #ff9966 -1px -1px 2px, #ff9966 1px -1px 2px,
+    #ff9966 -1px 1px 2px;
+  font-family: arial;
+  line-height: 0.3;
+  cursor: pointer;
+}
+.CodeMirror-foldgutter {
+  width: 0.7em;
+}
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+  cursor: pointer;
+}
+.CodeMirror-foldgutter-open:after, .CodeMirror-foldgutter-folded:after {
+  content: ">";
+  font-size: 0.8em;
+  opacity: 0.8;
+  transition: transform 0.2s;
+  display: inline-block;
+  top: -0.1em;
+  position: relative;
+  transform: rotate(90deg);
+}
+.CodeMirror-foldgutter-folded:after {
+  transform: none;
+}
+
 /* CURSOR */
 
 .CodeMirror-cursor {

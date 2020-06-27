@@ -64,6 +64,12 @@ export default class ReplProxy {
 				return this.handlers.on_unhandled_rejection(event.data);
 			case 'console':
 				return this.handlers.on_console(event.data);
+			case 'console_group':
+				return this.handlers.on_console_group(event.data);
+			case 'console_group_collapsed':
+				return this.handlers.on_console_group_collapsed(event.data);
+			case 'console_group_end':
+				return this.handlers.on_console_group_end(event.data);
 		}
 	}
 

@@ -1,5 +1,6 @@
 <script>
 	import { getContext, onMount } from 'svelte';
+	import marked from 'marked';
 	import SplitPane from '../SplitPane.svelte';
 	import Viewer from './Viewer.svelte';
 	import PaneWithPanel from './PaneWithPanel.svelte';
@@ -25,9 +26,16 @@
 
 	register_output({
 		set: async (selected, options) => {
-			if (selected.type === 'js') {
+			selected_type = selected.type;
+
+			if (selected.type === 'js' || selected.type === 'json') {
 				js_editor.set(`/* Select a component to see its compiled code */`);
 				css_editor.set(`/* Select a component to see its compiled code */`);
+				return;
+			}
+
+			if (selected.type === 'md') {
+				markdown = marked(selected.source);
 				return;
 			}
 
@@ -39,7 +47,12 @@
 		},
 
 		update: async (selected, options) => {
-			if (selected.type === 'js') return;
+			if (selected.type === 'js' || selected.type === 'json') return;
+
+			if (selected.type === 'md') {
+				markdown = marked(selected.source);
+				return;
+			}
 
 			const compiled = await compiler.compile(selected, options);
 			if (!js_editor) return; // unmounted
@@ -58,6 +71,8 @@
 	const setters = {};
 
 	let view = 'result';
+	let selected_type = '';
+	let markdown = '';
 </script>
 
 <style>
@@ -104,32 +119,42 @@
 		opacity: 1;
 		pointer-events: all;
 	}
+	iframe {
+		width: 100%;
+		height: 100%;
+		border: none;
+		display: block;
+	}
 </style>
 
 <div class="view-toggle">
-	<button
-		class:active="{view === 'result'}"
-		on:click="{() => view = 'result'}"
-	>Result</button>
+	{#if selected_type === 'md'}
+		<button class="active">Markdown</button>
+	{:else}
+		<button
+			class:active="{view === 'result'}"
+			on:click="{() => view = 'result'}"
+		>Result</button>
 
-	<button
-		class:active="{view === 'js'}"
-		on:click="{() => view = 'js'}"
-	>JS output</button>
+		<button
+			class:active="{view === 'js'}"
+			on:click="{() => view = 'js'}"
+		>JS output</button>
 
-	<button
-		class:active="{view === 'css'}"
-		on:click="{() => view = 'css'}"
-	>CSS output</button>
+		<button
+			class:active="{view === 'css'}"
+			on:click="{() => view = 'css'}"
+		>CSS output</button>
 
-	<button
+		<button
     	class:active="{view === 'sizes'}"
     	on:click="{() => (view = 'sizes')}"
-	>Bundle sizes</button>
+		>Bundle sizes</button>
+	{/if}
 </div>
 
 <!-- component viewer -->
-<div class="tab-content" class:visible="{view === 'result'}">
+<div class="tab-content" class:visible="{selected_type !== 'md' && view === 'result'}">
 	<Viewer
 		bind:this={viewer}
 		bind:error={runtimeError}
@@ -141,7 +166,7 @@
 </div>
 
 <!-- js output -->
-<div class="tab-content" class:visible="{view === 'js'}">
+<div class="tab-content" class:visible="{selected_type !== 'md' && view === 'js'}">
 	{#if embedded}
 		<CodeMirror
 			bind:this={js_editor}
@@ -168,7 +193,7 @@
 </div>
 
 <!-- css output -->
-<div class="tab-content" class:visible="{view === 'css'}">
+<div class="tab-content" class:visible="{selected_type !== 'md' && view === 'css'}">
 	<CodeMirror
 		bind:this={css_editor}
 		mode="css"
@@ -182,3 +207,7 @@
 	<BundleSizes {...$bundleSizes} />
 </div>
 
+<!-- markdown output -->
+<div class="tab-content" class:visible="{selected_type === 'md'}">
+	<iframe title="Markdown" srcdoc={markdown}></iframe>
+</div>

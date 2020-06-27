@@ -53,12 +53,15 @@
 	}
 
 	.panel-body {
-		max-height: calc(100% - 42px);
 		overflow: auto;
 	}
 
 	h3 {
 		font: 700 12px/1.5 var(--font);
 		color: #333;
+	}
+
+	section {
+		overflow: hidden;
 	}
 </style>

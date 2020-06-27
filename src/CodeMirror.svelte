@@ -63,6 +63,18 @@
 		editor.focus();
 	}
 
+	export function getHistory() {
+		return editor.getHistory();
+	}
+
+	export function setHistory(history) {
+		editor.setHistory(history);
+	}
+
+	export function clearHistory() {
+		if (editor) editor.clearHistory();
+	}
+
 	const modes = {
 		js: {
 			name: 'javascript',
@@ -75,6 +87,9 @@
 		svelte: {
 			name: 'handlebars',
 			base: 'text/html'
+		},
+		md: {
+			name: 'markdown'
 		}
 	};
 
@@ -120,18 +135,16 @@
 	}
 
 	onMount(() => {
-		if (_CodeMirror) {
-			CodeMirror = _CodeMirror;
-			createEditor(mode || 'svelte').then(() => {
-				if (editor) editor.setValue(code || '');
-			});
-		} else {
-			codemirror_promise.then(async mod => {
+		(async () => {
+			if (!_CodeMirror) {
+				let mod = await codemirror_promise;
 				CodeMirror = mod.default;
-				await createEditor(mode || 'svelte');
-				if (editor) editor.setValue(code || '');
-			});
-		}
+			} else {
+				CodeMirror = _CodeMirror;
+			}
+			await createEditor(mode || 'svelte');
+			if (editor) editor.setValue(code || '');
+		})();
 
 		return () => {
 			destroyed = true;
@@ -158,13 +171,26 @@
 			},
 			readOnly: readonly,
 			autoCloseBrackets: true,
-			autoCloseTags: true
+			autoCloseTags: true,
+			extraKeys: {
+				'Enter': 'newlineAndIndentContinueMarkdownList',
+				'Ctrl-/': 'toggleComment',
+				'Cmd-/': 'toggleComment',
+				'Ctrl-Q': function (cm) {
+					cm.foldCode(cm.getCursor());
+				},
+				'Cmd-Q': function (cm) {
+					cm.foldCode(cm.getCursor());
+				}
+			},
+			foldGutter: true,
+			gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
 		};
 
-		if (!tab) opts.extraKeys = {
-			Tab: tab,
-			'Shift-Tab': tab
-		};
+		if (!tab) {
+			opts.extraKeys['Tab'] = tab;
+			opts.extraKeys['Shift-Tab'] = tab;
+		}
 
 		// Creating a text editor is a lot of work, so we yield
 		// the main thread for a moment. This helps reduce jank

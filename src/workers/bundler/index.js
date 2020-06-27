@@ -1,4 +1,4 @@
-import * as rollup from 'rollup/dist/rollup.browser.es.js';
+import * as rollup from 'rollup/dist/es/rollup.browser.js';
 import commonjs from './plugins/commonjs.js';
 import glsl from './plugins/glsl.js';
 import json from './plugins/json.js';
@@ -121,6 +121,11 @@ async function get_bundle(uid, mode, cache, lookup) {
 
 			// importing from another file in REPL
 			if (importee in lookup) return importee;
+			if ((importee + '.js') in lookup) return importee + '.js';
+			if ((importee + '.json') in lookup) return importee + '.json';
+
+			// remove trailing slash
+			if (importee.endsWith('/')) importee = importee.slice(0, -1);
 
 			// importing from a URL
 			if (importee.startsWith('http:') || importee.startsWith('https:')) return importee;
@@ -185,7 +190,6 @@ async function get_bundle(uid, mode, cache, lookup) {
 					generate: mode,
 					format: 'esm',
 					dev: true,
-					name,
 					filename: name + '.svelte'
 				}, has_loopGuardTimeout_feature() && {
 					loopGuardTimeout: 100

@@ -1,5 +1,29 @@
 # svelte-repl changelog
 
+## 0.1.20
+
+* Update embedded Rollup version for support for more language features ([#122](https://github.com/sveltejs/svelte-repl/issues/122))
+
+## 0.1.19
+
+* Keep separate undo history in separate tabs ([#3](https://github.com/sveltejs/svelte-repl/issues/3))
+* Allow resizing pane with touch events ([#67](https://github.com/sveltejs/svelte-repl/pull/67))
+* Fix pointer style on component selector buttons ([#69](https://github.com/sveltejs/svelte-repl/pull/69))
+* Support the remaining `console.*` utilities ([#104](https://github.com/sveltejs/svelte-repl/pull/104))
+* Prevent browser translation in the code editor ([#113](https://github.com/sveltejs/svelte-repl/pull/113))
+
+## 0.1.18
+
+* Allow importing .js files without an extension ([#30](https://github.com/sveltejs/svelte-repl/issues/30))
+* Fix erroneous warnings about lowercase component names ([#45](https://github.com/sveltejs/svelte-repl/issues/45))
+* Support JSON files ([#70](https://github.com/sveltejs/svelte-repl/issues/70))
+* Allow file tabs to be reordered with drag and drop ([#71](https://github.com/sveltejs/svelte-repl/issues/71))
+* Support Markdown files ([#73](https://github.com/sveltejs/svelte-repl/issues/73))
+* Add keyboard `Ctrl-/`/`Cmd-/` keyboard shortcut for toggling comments ([#75](https://github.com/sveltejs/svelte-repl/issues/75))
+* Fix re-displaying values in console pane that have been mutated ([#80](https://github.com/sveltejs/svelte-repl/issues/80))
+* Fix importing directories with a trailing slash ([#91](https://github.com/sveltejs/svelte-repl/issues/91))
+* Fix scrollbar glitch ([#96](https://github.com/sveltejs/svelte-repl/pull/96))
+
 ## 0.1.17
 
 * Update template ([svelte/#3971](https://github.com/sveltejs/svelte/pull/3971))
