@@ -176,8 +176,15 @@
 				'Enter': 'newlineAndIndentContinueMarkdownList',
 				'Ctrl-/': 'toggleComment',
 				'Cmd-/': 'toggleComment',
-
-			}
+				'Ctrl-Q': function (cm) {
+					cm.foldCode(cm.getCursor());
+				},
+				'Cmd-Q': function (cm) {
+					cm.foldCode(cm.getCursor());
+				}
+			},
+			foldGutter: true,
+			gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
 		};
 
 		if (!tab) {
