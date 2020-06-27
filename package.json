@@ -1,6 +1,6 @@
 {
   "name": "@sveltejs/svelte-repl",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "The <Repl> component used on the Svelte website",
   "main": "src/Repl.svelte",
   "svelte": "src/Repl.svelte",
