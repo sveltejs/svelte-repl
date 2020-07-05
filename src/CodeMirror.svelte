@@ -24,6 +24,7 @@
 	export let flex = false;
 	export let lineNumbers = true;
 	export let tab = true;
+  export let theme = 'default';
 
 	let w;
 	let h;
@@ -184,7 +185,8 @@
 				}
 			},
 			foldGutter: true,
-			gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+			gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+      theme: theme,
 		};
 
 		if (!tab) {

@@ -6,6 +6,7 @@
 	const { bundle, selected, handle_change, register_module_editor } = getContext('REPL');
 
 	export let errorLoc;
+	export let theme;
 
 	let editor;
 	onMount(() => {
@@ -50,6 +51,7 @@
 			bind:this={editor}
 			{errorLoc}
 			on:change={handle_change}
+			{theme}
 		/>
 	</div>
 

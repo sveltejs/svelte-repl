@@ -18,6 +18,8 @@
 	export let fixedPos = 50;
 	export let injectedJS = '';
 	export let injectedCSS = '';
+	export let themeUrl;
+	export let theme;
 
 	const historyMap = new Map();
 
@@ -225,6 +227,13 @@
 	}
 </style>
 
+<svelte:head>
+<!-- TODO is this the best way to access a themes css? -->
+	{#if themeUrl}
+	<link rel="stylesheet" href={themeUrl} />
+	{/if}
+</svelte:head>
+
 <div class="container" class:orientation>
 	<SplitPane
 		type="{orientation === 'rows' ? 'vertical' : 'horizontal'}"
@@ -233,7 +242,7 @@
 	>
 		<section slot=a>
 			<ComponentSelector {handle_select}/>
-			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}"/>
+			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}" {theme}/>
 		</section>
 
 		<section slot=b style='height: 100%;'>
