@@ -2,6 +2,7 @@ import * as rollup from 'rollup/dist/es/rollup.browser.js';
 import commonjs from './plugins/commonjs.js';
 import glsl from './plugins/glsl.js';
 import json from './plugins/json.js';
+import replace from './plugins/replace.js';
 
 self.window = self; // egregious hack to get magic-string to work in a worker
 
@@ -217,7 +218,10 @@ async function get_bundle(uid, mode, cache, lookup) {
 				repl_plugin,
 				commonjs,
 				json,
-				glsl
+				glsl,
+				replace({
+					'process.env.NODE_ENV': JSON.stringify('production')
+				})
 			],
 			inlineDynamicImports: true,
 			onwarn(warning) {
@@ -229,6 +233,7 @@ async function get_bundle(uid, mode, cache, lookup) {
 
 		return { bundle, imports: Array.from(imports), cache: new_cache, error: null, warnings, all_warnings };
 	} catch (error) {
+		console.log(error);
 		return { error, imports: null, bundle: null, cache: new_cache, warnings, all_warnings };
 	}
 }
