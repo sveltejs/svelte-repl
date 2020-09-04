@@ -1,5 +1,9 @@
 # svelte-repl changelog
 
+## 0.2.1
+
+* Update bundled version of Rollup for bugfixes ([#133](https://github.com/sveltejs/svelte-repl/pull/133))
+
 ## 0.2.0
 
 * Add code folding ([#116](https://github.com/sveltejs/svelte-repl/pull/116))
