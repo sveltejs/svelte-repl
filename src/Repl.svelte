@@ -18,6 +18,7 @@
 	export let fixedPos = 50;
 	export let injectedJS = '';
 	export let injectedCSS = '';
+	export let scrollOnNewTab = true;
 
 	const historyMap = new Map();
 
@@ -232,7 +233,7 @@
 		{fixed}
 	>
 		<section slot=a>
-			<ComponentSelector {handle_select}/>
+			<ComponentSelector {handle_select} {scrollOnNewTab}/>
 			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}"/>
 		</section>
 

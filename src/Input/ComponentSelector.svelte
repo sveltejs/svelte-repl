@@ -2,8 +2,11 @@
 	import { getContext } from 'svelte';
 
 	export let handle_select;
+	export let scrollOnNewTab;
 
 	const { components, selected, request_focus, rebundle } = getContext('REPL');
+
+	const ROOT_CLASS_NAME = 'component-selector';
 
 	let editing = null;
 
@@ -70,7 +73,7 @@
 
 	let uid = 1;
 
-	function addNew() {
+	function addNew(event) {
 		const component = {
 			name: uid++ ? `Component${uid}` : 'Component1',
 			type: 'svelte',
@@ -79,10 +82,13 @@
 
 		editing = component;
 
-		setTimeout(() => {
-			// TODO we can do this without IDs
-			document.getElementById(component.name).scrollIntoView(false);
-		});
+		if (scrollOnNewTab) {
+			setTimeout(() => {
+				const currentComponentSelector = event.target.closest(`.${ROOT_CLASS_NAME}`);
+
+				currentComponentSelector.scrollIntoView();
+			});
+		}
 
 		components.update(components => components.concat(component));
 		handle_select(component);
@@ -266,7 +272,7 @@
 	}
 </style>
 
-<div class="component-selector">
+<div class={ROOT_CLASS_NAME}>
 	{#if $components.length}
 		<div class="file-tabs" on:dblclick="{addNew}">
 			{#each $components as component, index}
