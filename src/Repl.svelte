@@ -30,7 +30,18 @@
 
 	export async function set(data) {
 		components.set(data.components);
-		selected.set(data.components[0]);
+		
+		let selectedIndex = 0;
+		if (data.selectedComponent) {
+			const name = data.selectedComponent.split('.')[0];
+			const type = data.selectedComponent.split('.')[1];
+			data.components.forEach((v, i) => {
+				if (v.name === name && v.type === type) {
+					selectedIndex = i;
+				}
+			});
+		}
+		selected.set(data.components[selectedIndex]);
 
 		rebundle();
 
