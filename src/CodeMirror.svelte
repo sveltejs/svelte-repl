@@ -76,8 +76,12 @@
 	}
 	
 	export function setCursor(pos, ch, options) {
-  	editor.setCursor(pos, ch, options);
-  }
+  		editor.setCursor(pos, ch, options);
+  	}
+	
+	export function setSelection(anchor, head, options) {
+		editor.setSelection(anchor, head, options);
+	}
 
 	const modes = {
 		js: {
