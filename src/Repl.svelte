@@ -18,6 +18,7 @@
 	export let fixedPos = 50;
 	export let injectedJS = '';
 	export let injectedCSS = '';
+	export let errorSelect = 'selection';
 
 	const historyMap = new Map();
 
@@ -120,7 +121,27 @@
 			const component = $components.find(c => c.name === name && c.type === type);
 			handle_select(component);
 
-			// TODO select the line/column in question
+			setTimeout(() => {
+				module_editor.focus();
+				if (errorSelect === 'cursor') {
+						module_editor.setCursor({
+							line: item.start.line - 1,
+							ch: item.start.column,
+						});
+					} else if (errorSelect === 'selection') {
+						module_editor.setSelection(
+							{
+								line: item.start.line - 1,
+								ch: item.start.column,
+							},
+							{
+								line: item.end.line - 1,
+								ch: item.end.column,
+							}
+						);
+					}
+				}, 0);
+			},
 		},
 
 		handle_change: event => {
