@@ -74,6 +74,10 @@
 	export function clearHistory() {
 		if (editor) editor.clearHistory();
 	}
+	
+	export function setCursor(pos, ch, options) {
+  	editor.setCursor(pos, ch, options);
+  }
 
 	const modes = {
 		js: {
