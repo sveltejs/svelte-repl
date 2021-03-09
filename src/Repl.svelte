@@ -179,7 +179,6 @@
 
 	let input;
 	let sourceErrorLoc;
-	let runtimeErrorLoc; // TODO refactor this stuff — runtimeErrorLoc is unused
 	let status = null;
 
 	const bundler = is_browser && new Bundler({
@@ -233,7 +232,7 @@
 	>
 		<section slot=a>
 			<ComponentSelector {handle_select}/>
-			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}"/>
+			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc}"/>
 		</section>
 
 		<section slot=b style='height: 100%;'>
