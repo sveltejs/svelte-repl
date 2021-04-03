@@ -2,6 +2,14 @@
 	import { getContext, onMount } from 'svelte';
 	import CodeMirror from '../CodeMirror.svelte';
 	import Message from '../Message.svelte';
+	
+	function debounce(fn, timeout) {
+		let timeout_id;
+		return (...args) => {
+			clearTimeout(timeout_id);
+			timeout_id = setTimeout(() => fn(...args), timeout);
+		};
+	}
 
 	const { bundle, selected, handle_change, register_module_editor } = getContext('REPL');
 
@@ -49,7 +57,7 @@
 		<CodeMirror
 			bind:this={editor}
 			{errorLoc}
-			on:change={handle_change}
+			on:change={debounce(handle_change, 150)}
 		/>
 	</div>
 
