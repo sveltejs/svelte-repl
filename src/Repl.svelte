@@ -210,7 +210,7 @@
 		box-sizing: border-box;
 	}
 
-	.container :global(section) > :global(*):first-child {
+	.container :global(section > *:first-child) {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -219,7 +219,7 @@
 		box-sizing: border-box;
 	}
 
-	.container :global(section) > :global(*):last-child {
+	.container :global(section > *:last-child) {
 		width: 100%;
 		height: 100%;
 	}
