@@ -109,13 +109,12 @@
 		position: absolute;
 		width: 100%;
 		height: calc(100% - 42px) !important;
-		opacity: 0;
+		visibility: hidden;
 		pointer-events: none;
 	}
 
 	.tab-content.visible {
-		/* can't use visibility due to a weird painting bug in Chrome */
-		opacity: 1;
+		visibility: visible;
 		pointer-events: all;
 	}
 	iframe {
