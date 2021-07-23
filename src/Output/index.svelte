@@ -1,6 +1,6 @@
 <script>
 	import { getContext, onMount } from 'svelte';
-	import marked from 'marked';
+	import * as marked from 'marked';
 	import SplitPane from '../SplitPane.svelte';
 	import Viewer from './Viewer.svelte';
 	import PaneWithPanel from './PaneWithPanel.svelte';
@@ -34,7 +34,7 @@
 			}
 
 			if (selected.type === 'md') {
-				markdown = marked(selected.source);
+				markdown = marked.parse(selected.source);
 				return;
 			}
 
@@ -49,7 +49,7 @@
 			if (selected.type === 'js' || selected.type === 'json') return;
 
 			if (selected.type === 'md') {
-				markdown = marked(selected.source);
+				markdown = marked.parse(selected.source);
 				return;
 			}
 
