@@ -1,5 +1,8 @@
 # svelte-repl changelog
 
+## 0.2.2
+
+* Bump `marked` ([#170](https://github.com/sveltejs/svelte-repl/pull/170))
 ## 0.2.1
 
 * Update bundled version of Rollup for bugfixes ([#133](https://github.com/sveltejs/svelte-repl/pull/133))
