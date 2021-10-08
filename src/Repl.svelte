@@ -83,7 +83,8 @@
 		hydratable: false,
 		customElement: false,
 		immutable: false,
-		legacy: false
+		legacy: false,
+		cssFormat: false
 	});
 
 	let module_editor;

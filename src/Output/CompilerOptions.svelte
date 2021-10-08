@@ -143,5 +143,10 @@
 		<span class="key">legacy:</span>
 		<input type="checkbox" bind:checked={$compile_options.legacy}> <span class="boolean">{$compile_options.legacy}</span>
 	</label>
+
+	<label class="option">
+		<span class="key">cssFormat:</span>
+		<input type="checkbox" bind:checked={$compile_options.cssFormat}> <span class="boolean">{$compile_options.cssFormat}</span>
+	</label>
 	});
 </div>
