@@ -1,7 +1,6 @@
 <script>
 	import { getContext, onMount } from 'svelte';
 	import { parse } from 'marked';
-	import { css as prettyPrint } from 'js-beautify';
 	import SplitPane from '../SplitPane.svelte';
 	import Viewer from './Viewer.svelte';
 	import PaneWithPanel from './PaneWithPanel.svelte';
@@ -9,7 +8,6 @@
 	import Compiler from './Compiler.js';
 	import CodeMirror from '../CodeMirror.svelte';
 	import { is_browser } from '../env.js';
-	import CssOptions from './CSSOptions.svelte';
 
 	const { register_output } = getContext('REPL');
 
@@ -24,8 +22,6 @@
 	export let injectedCSS;
 
 	let foo; // TODO workaround for https://github.com/sveltejs/svelte/issues/2122
-	let css;
-	let beautify = false;
 
 	register_output({
 		set: async (selected, options) => {
@@ -46,7 +42,6 @@
 			if (!js_editor) return; // unmounted
 
 			js_editor.set(compiled.js, 'js');
-			css=compiled.css;
 			css_editor.set(compiled.css, 'css');
 		},
 
@@ -62,8 +57,6 @@
 			if (!js_editor) return; // unmounted
 
 			js_editor.update(compiled.js);
-			css=compiled.css;
-			beautify = false;
 			css_editor.update(compiled.css);
 		}
 	});
@@ -79,15 +72,6 @@
 	let view = 'result';
 	let selected_type = '';
 	let markdown = '';
-
-	function beautifyCss(applyFormat) {
-		if (css_editor) {
-			beautify = applyFormat;
-			const updated_css = beautify ? prettyPrint(css) : css;
-			css_editor.set(updated_css);
-		}
-	}
-
 </script>
 
 <style>
@@ -204,19 +188,12 @@
 
 <!-- css output -->
 <div class="tab-content" class:visible="{selected_type !== 'md' && view === 'css'}">
-	<PaneWithPanel pos={100} panel="Format">
-		<div slot="main">
-			<CodeMirror
-				bind:this={css_editor}
-				mode="css"
-				errorLoc={sourceErrorLoc}
-				readonly
-			/>
-		</div>
-		<div slot="panel-body">
-			<CssOptions beautify={beautify} beautifyCss={beautifyCss} />
-		</div>
-	</PaneWithPanel>
+	<CodeMirror
+		bind:this={css_editor}
+		mode="css"
+		errorLoc={sourceErrorLoc}
+		readonly
+	/>
 </div>
 
 <!-- markdown output -->
