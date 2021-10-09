@@ -1,8 +1,3 @@
-<script context="module">
-	let codemirror_promise;
-	let _CodeMirror;
-</script>
-
 <script>
 	import './codemirror.css';
 	import { onMount, createEventDispatcher } from 'svelte';
@@ -16,6 +11,7 @@
 	export let lineNumbers = true;
 	export let tab = true;
 
+	let codemirror_promise;
 	let w;
 	let h;
 	let code = '';
@@ -130,11 +126,9 @@
 			codemirror_promise = import('./codemirror.js');
 		}
 		(async () => {
-			if (!_CodeMirror) {
+			if (!CodeMirror) {
 				let mod = await codemirror_promise;
 				CodeMirror = mod.default;
-			} else {
-				CodeMirror = _CodeMirror;
 			}
 			await createEditor(mode || 'svelte');
 			if (editor) editor.setValue(code || '');
