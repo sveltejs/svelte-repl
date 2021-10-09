@@ -11,7 +11,6 @@
 	export let lineNumbers = true;
 	export let tab = true;
 
-	let codemirror_promise;
 	let w;
 	let h;
 	let code = '';
@@ -122,12 +121,9 @@
 	}
 
 	onMount(() => {
-		if (!codemirror_promise) {
-			codemirror_promise = import('./codemirror.js');
-		}
 		(async () => {
 			if (!CodeMirror) {
-				let mod = await codemirror_promise;
+				let mod = await import('./codemirror.js');
 				CodeMirror = mod.default;
 			}
 			await createEditor(mode || 'svelte');
