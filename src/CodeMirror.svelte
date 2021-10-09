@@ -1,19 +1,10 @@
 <script context="module">
-	import { is_browser } from './env.js';
-
 	let codemirror_promise;
 	let _CodeMirror;
-
-	if (is_browser) {
-		codemirror_promise = import('./codemirror.js');
-
-		codemirror_promise.then(mod => {
-			_CodeMirror = mod.default;
-		});
-	}
 </script>
 
 <script>
+	import './codemirror.css';
 	import { onMount, createEventDispatcher } from 'svelte';
 	import Message from './Message.svelte';
 
@@ -135,6 +126,9 @@
 	}
 
 	onMount(() => {
+		if (!codemirror_promise) {
+			codemirror_promise = import('./codemirror.js');
+		}
 		(async () => {
 			if (!_CodeMirror) {
 				let mod = await codemirror_promise;
