@@ -1,5 +1,9 @@
 # svelte-repl changelog
 
+## 0.3.0
+
+* Update for compatibility with SvelteKit ([#181](https://github.com/sveltejs/svelte-repl/pull/181))
+
 ## 0.2.2
 
 * Bump `marked` ([#170](https://github.com/sveltejs/svelte-repl/pull/170))
