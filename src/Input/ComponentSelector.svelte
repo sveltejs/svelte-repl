@@ -79,11 +79,6 @@
 
 		editing = component;
 
-		setTimeout(() => {
-			// TODO we can do this without IDs
-			document.getElementById(component.name).scrollIntoView(false);
-		});
-
 		components.update(components => components.concat(component));
 		handle_select(component);
 	}
