@@ -1,5 +1,9 @@
 # svelte-repl changelog
 
+## 0.4.1
+
+* Fix syntax error ([#188](https://github.com/sveltejs/svelte-repl/pull/188))
+
 ## 0.4.0
 
 * Track unsaved changes and warn when closing browser tab ([#156](https://github.com/sveltejs/svelte-repl/pull/156))
