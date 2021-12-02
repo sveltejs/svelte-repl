@@ -45,6 +45,16 @@
 		module_editor.clearHistory();
 	}
 
+	export function markSaved() {
+		components.update(components =>
+			components.map(c => {
+				c.modified = false;
+				return c;
+			});
+		)
+		selected.update(c => c);
+	}
+
 	export function update(data) {
 		const { name, type } = $selected || {};
 
@@ -130,11 +140,20 @@
 				// if a) components had unique IDs, b) we tracked selected
 				// *index* rather than component, and c) `selected` was
 				// derived from `components` and `index`
-				component.source = event.detail.value;
+				if (component.source != event.detail.value) {
+					component.source = event.detail.value;
+					component.modified = true;
+				}
 				return component;
 			});
 
-			components.update(c => c);
+			components.update(component => {
+				if (component.name === $selected.name) {
+					return $selected;
+				}
+
+				return component;
+			});
 
 			// recompile selected component
 			output.update($selected, $compile_options);
@@ -175,6 +194,13 @@
 
 	function get_component_name(component) {
 		return `${component.name}.${component.type}`
+	}
+
+	function beforeUnload(event) {
+		if ($components.find(component => component.modified)) {
+			event.preventDefault();
+			event.returnValue = '';
+		}
 	}
 
 	let input;
@@ -225,6 +251,8 @@
 	}
 </style>
 
+<svelte:window on:beforeunload={beforeUnload}/>
+
 <div class="container" class:orientation>
 	<SplitPane
 		type="{orientation === 'rows' ? 'vertical' : 'horizontal'}"
@@ -232,7 +260,7 @@
 		{fixed}
 	>
 		<section slot=a>
-			<ComponentSelector {handle_select}/>
+			<ComponentSelector {handle_select} on:add on:remove/>
 			<ModuleEditor bind:this={input} errorLoc="{sourceErrorLoc || runtimeErrorLoc}"/>
 		</section>
 

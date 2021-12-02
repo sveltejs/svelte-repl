@@ -1,9 +1,10 @@
 <script>
-	import { getContext } from 'svelte';
+	import { getContext, createEventDispatcher } from 'svelte';
 
 	export let handle_select;
 
 	const { components, selected, request_focus, rebundle } = getContext('REPL');
+	const dispatch = createEventDispatcher();
 
 	let editing = null;
 
@@ -54,6 +55,7 @@
 
 			if (~index) {
 				components.set($components.slice(0, index).concat($components.slice(index + 1)));
+				dispatch('remove', { components: $components });
 			} else {
 				console.error(`Could not find component! That's... odd`);
 			}
@@ -74,7 +76,8 @@
 		const component = {
 			name: uid++ ? `Component${uid}` : 'Component1',
 			type: 'svelte',
-			source: ''
+			source: '',
+			modified: true
 		};
 
 		editing = component;
@@ -86,6 +89,8 @@
 
 		components.update(components => components.concat(component));
 		handle_select(component);
+
+		dispatch('add', { components: $components });
 	}
 
 	function isComponentNameUsed(editing) {
@@ -288,7 +293,7 @@
 					<i class="drag-handle"></i>
 					{#if component.name === 'App' && component !== editing}
 						<div class="uneditable">
-							App.svelte
+							App.svelte{#if component.modified}*{/if}
 						</div>
 					{:else}
 						{#if component === editing}
@@ -310,7 +315,7 @@
 								title="edit component name"
 								on:click="{() => editTab(component)}"
 							>
-								{component.name}.{component.type}
+								{component.name}.{component.type}{#if component.modified}*{/if}
 							</div>
 
 							<span class="remove" on:click="{() => remove(component)}">
