@@ -50,7 +50,7 @@
 			components.map(c => {
 				c.modified = false;
 				return c;
-			});
+			})
 		)
 		selected.update(c => c);
 	}
