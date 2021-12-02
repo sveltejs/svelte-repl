@@ -4,7 +4,7 @@
 	export let handle_select;
 
 	const { components, selected, request_focus, rebundle } = getContext('REPL');
-	const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher();
 
 	let editing = null;
 
@@ -55,7 +55,7 @@
 
 			if (~index) {
 				components.set($components.slice(0, index).concat($components.slice(index + 1)));
-				dispatch('remove', {components: $components})
+				dispatch('remove', { components: $components });
 			} else {
 				console.error(`Could not find component! That's... odd`);
 			}
@@ -90,7 +90,7 @@
 		components.update(components => components.concat(component));
 		handle_select(component);
 
-		dispatch('add', {components: $components})
+		dispatch('add', { components: $components });
 	}
 
 	function isComponentNameUsed(editing) {

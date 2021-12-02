@@ -48,9 +48,9 @@
 	export function markSaved() {
 		components.update(components =>
 			components.map(c => {
-				c.modified = false
-				return c
-			})
+				c.modified = false;
+				return c;
+			});
 		)
 		selected.update(c => c);
 	}
@@ -142,16 +142,17 @@
 				// derived from `components` and `index`
 				if (component.source != event.detail.value) {
 					component.source = event.detail.value;
-					component.modified = true
+					component.modified = true;
 				}
 				return component;
 			});
 
 			components.update(component => {
-				if (component.name === $selected.name)
-					return $selected
+				if (component.name === $selected.name) {
+					return $selected;
+				}
 
-				return component
+				return component;
 			});
 
 			// recompile selected component
@@ -197,8 +198,8 @@
 
 	function beforeUnload(event) {
 		if ($components.find(component => component.modified)) {
-			event.preventDefault()
-			event.returnValue = ''
+			event.preventDefault();
+			event.returnValue = '';
 		}
 	}
 
