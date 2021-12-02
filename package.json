@@ -1,6 +1,6 @@
 {
   "name": "@sveltejs/svelte-repl",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "description": "The <Repl> component used on the Svelte website",
   "main": "src/Repl.svelte",
   "svelte": "src/Repl.svelte",
@@ -16,7 +16,7 @@
   "devDependencies": {
     "eslint": "^6.6.0",
     "eslint-plugin-svelte3": "^2.7.3",
-    "rollup": "^2.26.10",
+    "rollup": "^2.29.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.3.0",
@@ -35,7 +35,7 @@
   "dependencies": {
     "codemirror": "^5.49.2",
     "estree-walker": "^0.9.0",
-    "marked": "^0.8.2",
+    "marked": "^4.0.0",
     "sourcemap-codec": "^1.4.6",
     "svelte-json-tree": "0.0.5",
     "yootils": "0.0.16"
