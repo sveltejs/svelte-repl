@@ -1,5 +1,9 @@
 # svelte-repl changelog
 
+## 0.4.0
+
+* Track unsaved changes and warn when closing browser tab ([#156](https://github.com/sveltejs/svelte-repl/pull/156))
+
 ## 0.3.1
 
 * Update to `marked@4` ([#183](https://github.com/sveltejs/svelte-repl/pull/183))
